@@ -8,14 +8,14 @@ import {
 import {
   UploadOutlined,
   UserOutlined,
-  VideoCameraOutlined,
+  VideoCameraOutlined
 } from '@ant-design/icons';
 import logo from '@/assets/logo.svg';
 import style from './index.module.scss';
 
 const { Sider } = Layout;
 
-function Sidebar() {
+function SideBar() {
   const { collapsed } = useSelector(state => state.style);
   const logoText = '全球新闻发布管理系统';
 
@@ -74,4 +74,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default SideBar;
