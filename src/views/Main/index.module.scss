@@ -28,8 +28,16 @@
   }
 }
 
+.mainLogoCollapsed {
+  justify-content: center;
+}
+
 .mainLogoText {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.mainLogoTextCollapsed {
+  display: none;
 }

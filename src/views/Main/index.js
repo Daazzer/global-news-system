@@ -12,7 +12,8 @@ import {
 import {
   Spin,
   Layout,
-  Menu
+  Menu,
+  Tooltip
 } from 'antd';
 import {
   LoadingOutlined,
@@ -32,6 +33,7 @@ function Main() {
   const dispatch = useDispatch();
   const { loading, collapsed } = useSelector(state => state.style);
   const handleTriggerClick = () => dispatch({ type: 'style/TOGGLE_COLLAPSED' });
+  const logoText = '全球新闻发布管理系统';
 
   return (
     <Spin
@@ -45,17 +47,29 @@ function Main() {
     >
       <Layout className={style.main}>
         <Sider trigger={null} collapsible collapsed={collapsed}>
-          <NavLink
-            to="/"
-            className={style.mainLogo}
+          <Tooltip
+            placement="right"
+            trigger={collapsed ? 'hover' : ''}
+            title={logoText}
           >
-            <img
-              width="35"
-              alt="logo"
-              src={logo}
-            />
-            <span className={style.mainLogoText}>全球新闻发布管理系统</span>
-          </NavLink>
+            <NavLink
+              to="/"
+              className={[
+                style.mainLogo,
+                collapsed ? style.mainLogoCollapsed : ''
+              ].join(' ')}
+            >
+              <img
+                width="35"
+                alt="logo"
+                src={logo}
+              />
+              <span className={[
+                style.mainLogoText,
+                collapsed ? style.mainLogoTextCollapsed : ''
+              ].join(' ')}>{logoText}</span>
+            </NavLink>
+          </Tooltip>
           <Menu
             theme="dark"
             mode="inline"
