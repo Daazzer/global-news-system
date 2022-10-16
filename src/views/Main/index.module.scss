@@ -1,0 +1,35 @@
+.main {
+  height: 100vh;
+}
+
+.mainBackground {
+  background: #fff;
+}
+
+.mainSideTrigger {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+  &:hover {
+    color: #1890ff;
+  }
+}
+
+.mainLogo {
+  display: flex;
+  align-items: center;
+  padding: 10px 0 10px 5px;
+  color: #fff;
+  &:hover {
+    color: #fff;
+    text-shadow: 0 0 7px #fff;
+  }
+}
+
+.mainLogoText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

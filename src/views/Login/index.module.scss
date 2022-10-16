@@ -1,0 +1,25 @@
+.login {
+  background-color: #232741;
+  height: 100vh;
+}
+
+.loginForm {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  min-width: 380px;
+  padding: 20px 25px;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, .9);
+}
+
+.loginFormTitle {
+  text-align: center;
+  font-size: 28px;
+  margin: 0;
+}
+
+.loginFormLoginButton {
+  width: 100%;
+}
