@@ -11,14 +11,7 @@ const { Content } = Layout;
 
 function ContentBar() {
   return (
-    <Content
-      className={style.contentBar}
-      style={{
-        margin: '24px 16px',
-        padding: 24,
-        minHeight: 280,
-      }}
-    >
+    <Content className={style.contentBar}>
       <Switch>
         <Redirect exact from="/" to="/home" />
         <Route path="/home">
