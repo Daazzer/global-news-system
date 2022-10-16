@@ -1,5 +1,28 @@
 .headerBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
   background-color: #fff;
+}
+
+.infoBar {
+  display: flex;
+  align-items: center;
+  padding-right: 16px;
+  :global {
+    .info-text + .info-text {
+      margin-left: 15px;
+    }
+  }
+}
+
+.username {
+  margin-left: 3px;
+  color: #1890ff;  
+}
+
+.avatar {
+  cursor: pointer;
 }
 
 .siderBarTrigger {
