@@ -2,8 +2,7 @@ import { createElement } from 'react';
 import {
   Switch,
   Route,
-  Redirect,
-  NavLink
+  Redirect
 } from 'react-router-dom';
 import {
   useSelector,
@@ -11,30 +10,24 @@ import {
 } from 'react-redux';
 import {
   Spin,
-  Layout,
-  Menu,
-  Tooltip
+  Layout
 } from 'antd';
 import {
   LoadingOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
 } from '@ant-design/icons';
-import logo from '@/assets/logo.svg'
+import Sidebar from '@/components/Sidebar';
 import Home from './Home';
 import style from './index.module.scss';
 
-const { Header, Sider, Content } = Layout;
+const { Header, Content } = Layout;
 
 function Main() {
   const dispatch = useDispatch();
   const { loading, collapsed } = useSelector(state => state.style);
   const handleTriggerClick = () => dispatch({ type: 'style/TOGGLE_COLLAPSED' });
-  const logoText = '全球新闻发布管理系统';
-
+  
   return (
     <Spin
       size="large"
@@ -46,53 +39,7 @@ function Main() {
       />}
     >
       <Layout className={style.main}>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
-          <Tooltip
-            placement="right"
-            trigger={collapsed ? 'hover' : ''}
-            title={logoText}
-          >
-            <NavLink
-              to="/"
-              className={[
-                style.mainLogo,
-                collapsed ? style.mainLogoCollapsed : ''
-              ].join(' ')}
-            >
-              <img
-                width="35"
-                alt="logo"
-                src={logo}
-              />
-              <span className={[
-                style.mainLogoText,
-                collapsed ? style.mainLogoTextCollapsed : ''
-              ].join(' ')}>{logoText}</span>
-            </NavLink>
-          </Tooltip>
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            items={[
-              {
-                key: '1',
-                icon: <UserOutlined />,
-                label: 'nav 1',
-              },
-              {
-                key: '2',
-                icon: <VideoCameraOutlined />,
-                label: 'nav 2',
-              },
-              {
-                key: '3',
-                icon: <UploadOutlined />,
-                label: 'nav 3',
-              },
-            ]}
-          />
-        </Sider>
+        <Sidebar />
         <Layout className="site-layout">
           <Header
             className={style.mainBackground}

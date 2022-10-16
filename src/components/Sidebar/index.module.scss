@@ -1,0 +1,24 @@
+.logo {
+  display: flex;
+  align-items: center;
+  padding: 10px 0 10px 5px;
+  color: #fff;
+  &:hover {
+    color: #fff;
+    text-shadow: 0 0 7px #fff;
+  }
+}
+
+.logoCollapsed {
+  justify-content: center;
+}
+
+.logoText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logoTextCollapsed {
+  display: none;
+}
