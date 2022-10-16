@@ -19,7 +19,7 @@ function HeaderBar() {
       }}
     >
       {createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-        className: style.headerBarSideBarTrigger,
+        className: style.siderBarTrigger,
         onClick: handleTriggerClick,
       })}
     </Header>

@@ -9,10 +9,10 @@ import {
   Layout
 } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import Sidebar from '@/components/SideBar';
+import Siderbar from '@/components/SiderBar';
+import HeaderBar from '@/components/HeaderBar';
 import Home from './Home';
 import style from './index.module.scss';
-import HeaderBar from '@/components/HeaderBar';
 
 const { Content } = Layout;
 
@@ -30,7 +30,7 @@ function Main() {
       />}
     >
       <Layout className={style.main}>
-        <Sidebar />
+        <Siderbar />
         <Layout className="site-layout">
           <HeaderBar />
           <Content

@@ -15,7 +15,7 @@ import style from './index.module.scss';
 
 const { Sider } = Layout;
 
-function SideBar() {
+function SiderBar() {
   const { collapsed } = useSelector(state => state.style);
   const logoText = '全球新闻发布管理系统';
 
@@ -74,4 +74,4 @@ function SideBar() {
   );
 }
 
-export default SideBar;
+export default SiderBar;
