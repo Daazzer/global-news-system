@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Layout,
   Menu,
@@ -87,6 +87,7 @@ const getMenus = permissions => {
 };
 
 function SiderBar() {
+  const dispatch = useDispatch();
   const [menus, setMenus] = useState([]);
   const [defaultSelectedKeys, setDefaultSelectedKeys] = useState([]);
   const [defaultOpenKeys, setDefaultOpenKeys] = useState([]);
@@ -106,6 +107,7 @@ function SiderBar() {
     const menusTree = getAssembleTree(permissions);
     const menus = getMenus(menusTree);
 
+    dispatch({ type: 'main/SET_PERMISSIONS', payload: permissions });
     setDefaultSelectedKeys(defaultSelectedKeys);
     setDefaultOpenKeys(defaultOpenKeys);
     setTimeout(() => setMenus(menus));
