@@ -38,7 +38,6 @@ const getKeys = permissions => {
   let defaultSelectedKeys = [];
 
   defaultOpenKeys.push(key);
-
   while (currentLevelFirstNode) {
     // eslint-disable-next-line
     currentLevelFirstNode = permissions.find(menu => menu.parentId === currentLevelFirstNode.id);
@@ -93,11 +92,11 @@ function SiderBar() {
   const [defaultOpenKeys, setDefaultOpenKeys] = useState([]);
   const { user } = useSelector(state => state.login);
   const { collapsed } = useSelector(state => state.style);
-  const userPermissions = user?.role.permissions || [];
 
   const init = useCallback(async () => {
     const res = await getPermissions();
     const allPermissions = res.data;
+    const userPermissions = user?.role.permissions || [];
     // 判断当前用户的权限
     const permissions = userPermissions.includes('*')
       ? allPermissions
@@ -110,7 +109,7 @@ function SiderBar() {
     setDefaultSelectedKeys(defaultSelectedKeys);
     setDefaultOpenKeys(defaultOpenKeys);
     setTimeout(() => setMenus(menus));
-  }, [userPermissions, dispatch]);
+  }, [user?.role.permissions, dispatch]);
 
   useEffect(() => {
     init();

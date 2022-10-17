@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import {
   Switch,
   Route,
@@ -17,11 +18,11 @@ const getRoutes = tree => {
     if (!children) {
       routes.push({
         id,
-        path: '/' + [...paths, key].join('/')
+        path: '/' + paths.concat(key).join('/')
       });
       paths = [];
     } else {
-      routes = fn(children, [...paths, key], routes);
+      routes = fn(children, paths.concat(key), routes);
     }
 
     return routes;
@@ -31,14 +32,23 @@ const getRoutes = tree => {
 };
 
 function ContentBar() {
+  const [routes, setRoutes] = useState([]);
   const { permissions } = useSelector(state => state.main);
   const permissionsTree = getAssembleTree(permissions);
-  const routes = getRoutes(permissionsTree);
-  console.log(routes);
+  const firstRoute = useMemo(() => {
+    const [firstRoute] = routes;
+    return firstRoute;
+  }, [routes]);
+
+  useEffect(() => {
+    const routes = getRoutes(permissionsTree);
+    setRoutes(routes);
+  }, []);
+
   return (
     <Content className={style.contentBar}>
       <Switch>
-        <Redirect exact from="/" to="/home" />
+        {firstRoute && <Redirect exact from="/" to={firstRoute.path} />}
         <Route path="/home">{Home}</Route>
       </Switch>
     </Content>
