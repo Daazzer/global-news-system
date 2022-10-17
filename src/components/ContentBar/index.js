@@ -43,10 +43,16 @@ const viewsMap = {
 const getRoutes = tree => {
   const fn = (tree, paths = [], routes = []) => tree.reduce((routes, node) => {
     const { children, key, id } = node;
+    let path = '';
+    if (!children) {
+      path = '/' + paths.concat(key).join('/')
+    }
+
     return !children
       ? routes.concat({
-        id,
-        path: '/' + paths.concat(key).join('/')
+        key: id,
+        path,
+        children: viewsMap[path]
       })
       : fn(children, paths.concat(key), routes);
   }, routes);
@@ -68,13 +74,7 @@ function ContentBar() {
     <Content className={style.contentBar}>
       <Switch>
         {routes.length && <Redirect exact from="/" to={routes[0].path} />}
-        {routes.map(route =>
-          <Route
-            key={route.id}
-            path={route.path}
-            component={viewsMap[route.path]}
-          />
-        )}
+        {routes.map(route => <Route {...route} />)}
       </Switch>
     </Content>
   );
