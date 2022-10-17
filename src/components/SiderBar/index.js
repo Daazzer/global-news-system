@@ -32,25 +32,18 @@ const iconMap = {
 
 const getMenus = permissions => {
   const fn = (permissions, paths = []) => permissions.map(permission => {
-    const { children, parentId, key, name: label } = permission;
+    const { children, key, name: label } = permission;
     const menu = {
       key,
       label,
       icon: iconMap[key]
     };
 
-    if (!parentId) {
-      paths = [];
-    }
-
-    paths.push(key);
-
     if (children?.length) {
-      menu.children = fn(children, paths);
+      menu.children = fn(children, paths.concat(key));
     } else {
-      const path = '/' + paths.join('/');
+      const path = '/' + paths.concat(key).join('/');
       menu.label = <Link to={path}>{label}</Link>;
-      paths.pop();
     }
 
     return menu;
