@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import NProgress from 'nprogress';
 import Login from '@/views/Login';
 import Main from '@/views/Main';
+import NotFound from '@/views/NotFound';
 
 function AppRouter() {
   NProgress.start();
@@ -29,13 +30,14 @@ function AppRouter() {
               : <Login />
           )}
         </Route>
-        <Route path="/">
+        <Route exact={!user} path="/">
           {() => (
             user
               ? <Main />
               : <Redirect to="/login" />
           )}
         </Route>
+        <Route path="*">{NotFound}</Route>
       </Switch>
     </Router>
   );

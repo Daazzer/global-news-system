@@ -20,6 +20,7 @@ import Unpublished from '@/views/Main/PublishMange/Unpublished';
 import Published from '@/views/Main/PublishMange/Published';
 import Revoked from '@/views/Main/PublishMange/Revoked';
 import Test11 from '@/views/Main/Test/Test1/Test11';
+import NotFound from '@/views/NotFound';
 import style from './index.module.scss';
 
 const { Content } = Layout;
@@ -75,6 +76,7 @@ function ContentBar() {
       <Switch>
         {routes.length && <Redirect exact from="/" to={routes[0].path} />}
         {routes.map(route => <Route {...route} />)}
+        <Route path="*">{NotFound}</Route>
       </Switch>
     </Content>
   );
