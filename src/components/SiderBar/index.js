@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Layout,
@@ -30,37 +30,11 @@ const iconMap = {
   'publish-manage': <CommentOutlined />
 };
 
-const getKeys = permissions => {
-  // eslint-disable-next-line
-  let currentLevelFirstNode = permissions.find(menu => menu.parentId === 0);
-  let key = String(currentLevelFirstNode.id);
-  let defaultOpenKeys = [];
-  let defaultSelectedKeys = [];
-
-  defaultOpenKeys.push(key);
-  while (currentLevelFirstNode) {
-    // eslint-disable-next-line
-    currentLevelFirstNode = permissions.find(menu => menu.parentId === currentLevelFirstNode.id);
-    key = String(currentLevelFirstNode?.id || '');
-
-    if (key) {
-      defaultOpenKeys.push(key);
-    }
-  }
-
-  defaultSelectedKeys = defaultOpenKeys.filter((_, index) => index === defaultOpenKeys.length - 1);
-
-  return {
-    defaultOpenKeys,
-    defaultSelectedKeys
-  };
-};
-
 const getMenus = permissions => {
   const fn = (permissions, paths = []) => permissions.map(permission => {
-    const { children, id, parentId, key, name: label } = permission;
+    const { children, parentId, key, name: label } = permission;
     const menu = {
-      key: String(id),
+      key,
       label,
       icon: iconMap[key]
     };
@@ -85,11 +59,22 @@ const getMenus = permissions => {
   return fn(permissions);
 };
 
+const useKeys = () => {
+  const location = useLocation();
+  const keys = location.pathname.split('/');
+  const defaultOpenKeys = keys.filter((_, index) => index);
+  const selectedKeys = [keys[keys.length - 1]];
+
+  return {
+    defaultOpenKeys,
+    selectedKeys
+  };
+};
+
 function SiderBar() {
   const dispatch = useDispatch();
+  const { defaultOpenKeys, selectedKeys } = useKeys();
   const [menus, setMenus] = useState([]);
-  const [defaultSelectedKeys, setDefaultSelectedKeys] = useState([]);
-  const [defaultOpenKeys, setDefaultOpenKeys] = useState([]);
   const { user } = useSelector(state => state.login);
   const { collapsed } = useSelector(state => state.style);
 
@@ -101,14 +86,11 @@ function SiderBar() {
     const permissions = userPermissions.includes('*')
       ? allPermissions
       : allPermissions.filter(permission => userPermissions.includes(permission));
-    const { defaultOpenKeys, defaultSelectedKeys } = getKeys(permissions);
     const menusTree = getAssembleTree(permissions);
     const menus = getMenus(menusTree);
 
     dispatch({ type: 'main/SET_PERMISSIONS', payload: permissions });
-    setDefaultSelectedKeys(defaultSelectedKeys);
-    setDefaultOpenKeys(defaultOpenKeys);
-    setTimeout(() => setMenus(menus));
+    setMenus(menus);
   }, [user?.role.permissions, dispatch]);
 
   useEffect(() => {
@@ -145,14 +127,14 @@ function SiderBar() {
           ].join(' ')}>{logoText}</span>
         </NavLink>
       </Tooltip>
-      {menus.length && <Menu
+      <Menu
         theme="dark"
         mode="inline"
         className={style.sideBarMenu}
         defaultOpenKeys={defaultOpenKeys}
-        defaultSelectedKeys={defaultSelectedKeys}
+        selectedKeys={selectedKeys}
         items={menus}
-      />}
+      />
     </Sider>
   );
 }
