@@ -20,7 +20,7 @@ import logo from '@/assets/logo.svg';
 import style from './index.module.scss';
 
 const { Sider } = Layout;
-
+const logoText = '全球新闻发布管理系统';
 const iconMap = {
   home: <HomeOutlined />,
   'user-manage': <UserOutlined />,
@@ -94,7 +94,6 @@ function SiderBar() {
   const { user } = useSelector(state => state.login);
   const { collapsed } = useSelector(state => state.style);
   const userPermissions = user?.role.permissions;
-  const logoText = '全球新闻发布管理系统';
 
   const init = useCallback(async () => {
     const res = await getPermissions();
@@ -111,7 +110,7 @@ function SiderBar() {
     setDefaultSelectedKeys(defaultSelectedKeys);
     setDefaultOpenKeys(defaultOpenKeys);
     setTimeout(() => setMenus(menus));
-  }, [userPermissions]);
+  }, [userPermissions, dispatch]);
 
   useEffect(() => {
     init();
