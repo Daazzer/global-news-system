@@ -32,3 +32,15 @@ export function getAssembleTree(
 
   return treeData?.length ? treeData : data;
 }
+
+/**
+ * 翻译枚举值
+ * @template ValueType 传入的枚举值类型
+ * @param {ValueType} value 实际值
+ * @param {{ label: string; value: ValueType }[]} options 枚举选项
+ * @returns {string}
+ */
+export function getOptionsLabel(value, options) {
+  const option = options.find(option => option.value === value);
+  return option?.label || '';
+}

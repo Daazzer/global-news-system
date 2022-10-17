@@ -53,7 +53,7 @@ const getRoutes = tree => {
       ? routes.concat({
         key: id,
         path,
-        children: viewsMap[path]
+        component: viewsMap[path]
       })
       : fn(children, paths.concat(key), routes);
   }, routes);
