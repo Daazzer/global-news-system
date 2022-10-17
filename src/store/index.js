@@ -6,6 +6,7 @@ import {
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import loginReducer from './reducers/loginReducer';
+import mainReducer from './reducers/mainReducer';
 import styleReducer from './reducers/styleReducer';
 
 const persistConfig = {
@@ -16,7 +17,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   login: loginReducer,
-  style: styleReducer
+  style: styleReducer,
+  main: mainReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -98,22 +98,17 @@ function SiderBar() {
   const init = useCallback(async () => {
     const res = await getPermissions();
     const allPermissions = res.data;
-
     // 判断当前用户的权限
     const permissions = userPermissions.includes('*')
       ? allPermissions
       : allPermissions.filter(permission => userPermissions.includes(permission));
-
     const { defaultOpenKeys, defaultSelectedKeys } = getKeys(permissions);
     const menusTree = getAssembleTree(permissions);
-
     const menus = getMenus(menusTree);
 
     setDefaultSelectedKeys(defaultSelectedKeys);
     setDefaultOpenKeys(defaultOpenKeys);
-    setTimeout(() => {
-      setMenus(menus);
-    });
+    setTimeout(() => setMenus(menus));
   }, [userPermissions]);
 
   useEffect(() => {
