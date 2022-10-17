@@ -84,7 +84,7 @@ function SiderBar() {
 
     dispatch({ type: 'main/SET_PERMISSIONS', payload: permissions });
     setMenus(menus);
-  }, [user?.role.permissions, dispatch]);
+  }, [user, dispatch]);
 
   useEffect(() => {
     init();
