@@ -45,7 +45,7 @@ const getRoutes = tree => {
     const { children, key, id } = node;
     let path = '';
     if (!children) {
-      path = '/' + paths.concat(key).join('/')
+      path = '/' + paths.concat(key).join('/');
     }
 
     return !children
