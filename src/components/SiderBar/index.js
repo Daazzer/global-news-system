@@ -93,7 +93,7 @@ function SiderBar() {
   const [defaultOpenKeys, setDefaultOpenKeys] = useState([]);
   const { user } = useSelector(state => state.login);
   const { collapsed } = useSelector(state => state.style);
-  const userPermissions = user?.role.permissions;
+  const userPermissions = user?.role.permissions || [];
 
   const init = useCallback(async () => {
     const res = await getPermissions();
