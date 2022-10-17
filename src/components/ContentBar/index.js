@@ -15,17 +15,12 @@ const { Content } = Layout;
 const getRoutes = tree => {
   const fn = (tree, paths = [], routes = []) => tree.reduce((routes, node) => {
     const { children, key, id } = node;
-    if (!children) {
-      routes.push({
+    return !children
+      ? routes.concat({
         id,
         path: '/' + paths.concat(key).join('/')
-      });
-      paths = [];
-    } else {
-      routes = fn(children, paths.concat(key), routes);
-    }
-
-    return routes;
+      })
+      : fn(children, paths.concat(key), routes);
   }, routes);
 
   return fn(tree);
