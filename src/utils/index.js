@@ -30,5 +30,5 @@ export function getAssembleTree(
     return father[parentId] === rootId;
   });
 
-  return treeData?.length ? treeData : data
+  return treeData?.length ? treeData : data;
 }
