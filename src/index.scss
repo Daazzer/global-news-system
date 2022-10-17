@@ -1,2 +1,22 @@
 @import "~antd/dist/antd.css";
 @import "~nprogress/nprogress.css";
+
+::-webkit-scrollbar {
+  width: 5px; /*对垂直流动条有效*/
+  height: 5px; /*对水平流动条有效*/
+}
+
+/* 滚动槽（轨道）样式 */
+::-webkit-scrollbar-track{
+  background-color: transparent;
+  border-radius: 10px; 
+}
+
+/*定义滑块颜色、内阴影及圆角*/
+::-webkit-scrollbar-thumb{
+  border-radius: 10px;
+  background-color: #c1c1c1;
+  &:window-inactive {
+    background-color: #fff;
+  }
+}

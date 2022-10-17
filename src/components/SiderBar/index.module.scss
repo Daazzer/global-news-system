@@ -1,3 +1,15 @@
+.sideBar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.sideBarMenu {
+  flex: 1 0;
+  height: 93%;
+  overflow: auto;
+}
+
 .logo {
   display: flex;
   align-items: center;

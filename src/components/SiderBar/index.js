@@ -120,6 +120,7 @@ function SiderBar() {
       collapsible
       trigger={null}
       collapsed={collapsed}
+      className={style.sideBar}
     >
       <Tooltip
         placement="right"
@@ -147,6 +148,7 @@ function SiderBar() {
       {menus.length && <Menu
         theme="dark"
         mode="inline"
+        className={style.sideBarMenu}
         defaultOpenKeys={defaultOpenKeys}
         defaultSelectedKeys={defaultSelectedKeys}
         items={menus}
