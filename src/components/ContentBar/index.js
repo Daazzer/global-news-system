@@ -73,11 +73,13 @@ function ContentBar() {
 
   return (
     <Content className={style.contentBar}>
-      <Switch>
-        {routes.length && <Redirect exact from="/" to={routes[0].path} />}
-        {routes.map(route => <Route {...route} />)}
-        <Route path="*">{NotFound}</Route>
-      </Switch>
+      {routes.length
+        ? <Switch>
+          <Redirect exact from="/" to={routes[0].path} />
+          {routes.map(route => <Route {...route} />)}
+          <Route path="*">{NotFound}</Route>
+        </Switch>
+        : null}
     </Content>
   );
 }
