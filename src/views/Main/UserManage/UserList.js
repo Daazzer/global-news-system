@@ -111,8 +111,8 @@ function UserList() {
           <Popconfirm
             title={`你确定要删除用户“${row.username}”吗？`}
             onConfirm={() => handleDel(row)}
-            okText="是"
-            cancelText="否"
+            okText="确定"
+            cancelText="取消"
             disabled={row.default === DefaultUser.YES}
           >
             <Button
