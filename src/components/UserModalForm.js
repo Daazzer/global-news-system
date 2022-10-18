@@ -5,19 +5,15 @@ import { Region, Role } from '@/utils/enums';
 
 const { Option } = Select;
 
-function UserModalForm({ title, open, onCancel, onOk }) {
-  const [form] = Form.useForm();
+function UserModalForm({ form, title, open, onCancel, onOk }) {
   const [roles, setRoles] = useState([]);
   const [allRegions, setAllRegions] = useState([]);
-  const [disabledRegion, setDisabledRegion] = useState(false);
-  const [roleId, setRoleId] = useState(null);
-
-  const regions = useMemo(() => {
-    return allRegions.filter(region => roleId === Role.ADMIN
-      ? region.value === Region.GLOBAL
-      : region.value !== Region.GLOBAL
-    );
-  }, [allRegions, roleId]);
+  const [roleId, setRoleId] = useState(form.getFieldValue('roleId'));
+  const disabledRegion = useMemo(() => roleId === Role.ADMIN, [roleId]);
+  const regions = useMemo(() => allRegions.filter(region => roleId === Role.ADMIN
+    ? region.value === Region.GLOBAL
+    : region.value !== Region.GLOBAL
+  ), [allRegions, roleId]);
 
   /** 初始化区域数据 */
   const initAllRegions = async () => {
@@ -40,7 +36,6 @@ function UserModalForm({ title, open, onCancel, onOk }) {
     } else if (form.getFieldValue('region') === Region.GLOBAL) {
       form.setFieldValue('region', null);
     }
-    setDisabledRegion(isAdmin);
     setRoleId(value);
   };
 
@@ -55,7 +50,7 @@ function UserModalForm({ title, open, onCancel, onOk }) {
 
   return (
     <Modal
-      getContainer={false}
+      forceRender
       title={title}
       open={open}
       onOk={handleModalOk}

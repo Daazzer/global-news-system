@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Switch, Button } from 'antd';
+import { Table, Switch, Button, Form } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { getUsers } from '@/api/login';
 import { setUser } from '@/api/user';
@@ -9,13 +9,26 @@ import UserModalForm from '@/components/UserModalForm';
 import style from './UserList.module.scss';
 
 function UserList() {
+  const [form] = Form.useForm();
   const [dataSource, setDataSource] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('添加用户');
 
   const handleModalOpen = (type, data) => {
+    const { roleId, region, username, password } = data || {};
+    const formData = type === 'add' ? null : {
+      username,
+      password,
+      region,
+      roleId
+    };
     setModalTitle(`${type === 'add' ? '添加' : '编辑'}用户`);
     setIsModalOpen(true);
+    if (type === 'add') {
+      form.resetFields();
+    } else {
+      form.setFieldsValue(formData);
+    }
   };
 
   /** 初始化列表数据 */
@@ -78,6 +91,7 @@ function UserList() {
             shape="circle"
             disabled={row.default === DefaultUser.YES}
             icon={<EditOutlined />}
+            onClick={() => handleModalOpen('edit', row)}
           />
           <Button
             danger
@@ -109,6 +123,7 @@ function UserList() {
       <UserModalForm
         title={modalTitle}
         open={isModalOpen}
+        form={form}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
       />
