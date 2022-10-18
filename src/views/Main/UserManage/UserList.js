@@ -138,6 +138,7 @@ function UserList() {
       >添加用户</Button>
       <Table
         pagination={false}
+        scroll={{ y: 480 }}
         dataSource={dataSource}
         columns={columns}
         rowKey={row => row.id}
