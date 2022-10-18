@@ -11,6 +11,20 @@ export const DefaultUser = {
 };
 
 /**
+ * 角色类型
+ * @readonly
+ * @enum {number}
+ */
+export const Role = {
+  /** 超级管理员 */
+  ADMIN: 1,
+  /** 区域管理员 */
+  REGION_MANAGER: 2,
+  /** 区域编辑 */
+  REGION_EDITOR: 3
+};
+
+/**
  * 区域
  * @readonly
  * @enum {number}
