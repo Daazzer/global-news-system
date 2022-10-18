@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Popconfirm, Table, Form, message } from 'antd';
 import { KeyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { getRoles } from '@/api/userList';
-import style from './RoleList.module.scss';
 import RoleModalForm from '@/components/RoleModalForm';
+import PermissionsModalTree from '@/components/PermissionsModalTree';
 import { Role } from '@/utils/enums';
-import PermissionsModal from '@/components/PermissionsModal';
+import { getRoles } from '@/api/userList';
 import { delRole } from '@/api/roleList';
+import style from './RoleList.module.scss';
 
 /**
  * 角色列表
@@ -120,7 +120,7 @@ function RoleList() {
         onOk={handleAddOk}
         onCancel={handleAddCancel}
       />
-      <PermissionsModal
+      <PermissionsModalTree
         data={permissionsModalData}
         open={isPermissionsModalOpen}
         onCheck={checkedKeys => setPermissionsModalData({ ...permissionsModalData, permissions: checkedKeys })}

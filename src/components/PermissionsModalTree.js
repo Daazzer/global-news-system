@@ -22,7 +22,7 @@ const getTreeData = tree => {
  * 权限树模态框
  * @returns {React.ReactNode}
  */
-function PermissionsModal({ open, data, onOk, onCancel, onCheck }) {
+function PermissionsModalTree({ open, data, onOk, onCancel, onCheck }) {
   const [treeData, setTreeData] = useState([]);
 
   const initTreeData = async () => {
@@ -63,4 +63,4 @@ function PermissionsModal({ open, data, onOk, onCancel, onCheck }) {
   );
 }
 
-export default PermissionsModal;
+export default PermissionsModalTree;
