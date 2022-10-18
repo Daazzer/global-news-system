@@ -1,12 +1,24 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, ReactNode } from 'react';
 import { Modal, Form, Input, Select } from 'antd';
 import PropTypes from 'prop-types';
-import { getRegions, getRoles } from '@/api/main';
+import { addUser, getRegions, getRoles, setUser } from '@/api/userList';
 import { Region, Role } from '@/utils/enums';
 
 const { Option } = Select;
-
-function UserModalForm({ form, title, open, onCancel, onOk }) {
+/**
+ * 用户模态框表单
+ * @param {object} props
+ * @param {import("rc-field-form").FormInstance} props.form
+ * @returns {ReactNode}
+ */
+function UserModalForm({
+  data,
+  form,
+  title,
+  open,
+  onCancel,
+  onOk
+}) {
   const [roles, setRoles] = useState([]);
   const [allRegions, setAllRegions] = useState([]);
   const [roleId, setRoleId] = useState(form.getFieldValue('roleId'));
@@ -41,6 +53,15 @@ function UserModalForm({ form, title, open, onCancel, onOk }) {
   };
 
   const handleModalOk = async () => {
+    const formData = await form.validateFields();
+    if (data) {
+      await setUser({
+        id: data.id,
+        ...formData
+      });
+    } else {
+      await addUser(formData);
+    }
     onOk();
   };
 

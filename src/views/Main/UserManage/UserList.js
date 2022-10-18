@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Table, Switch, Button, Form } from 'antd';
+import { Table, Switch, Button, Form, message } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { getUsers } from '@/api/login';
-import { setUser } from '@/api/user';
+import { setUser } from '@/api/userList';
 import { getOptionsLabel } from '@/utils';
 import { DefaultUser, Region, UserState } from '@/utils/enums';
 import UserModalForm from '@/components/UserModalForm';
@@ -13,6 +13,7 @@ function UserList() {
   const [dataSource, setDataSource] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('添加用户');
+  const [userModalformData, setUserModalformData] = useState(null);
 
   const handleModalOpen = (type, data) => {
     const { roleId, region, username, password } = data || {};
@@ -26,8 +27,10 @@ function UserList() {
     setIsModalOpen(true);
     if (type === 'add') {
       form.resetFields();
+      setUserModalformData(null);
     } else {
       form.setFieldsValue(formData);
+      setUserModalformData(data);
     }
   };
 
@@ -44,6 +47,12 @@ function UserList() {
       state: value ? UserState.ENABLED : UserState.DISABLED
     });
 
+    initDataSource();
+  };
+
+  const handleUserModalFormOk = () => {
+    message.success(`${userModalformData ? '修改' : '添加'}用户成功`);
+    setIsModalOpen(false);
     initDataSource();
   };
 
@@ -123,8 +132,9 @@ function UserList() {
       <UserModalForm
         title={modalTitle}
         open={isModalOpen}
+        data={userModalformData}
         form={form}
-        onOk={() => setIsModalOpen(false)}
+        onOk={handleUserModalFormOk}
         onCancel={() => setIsModalOpen(false)}
       />
     </div>
