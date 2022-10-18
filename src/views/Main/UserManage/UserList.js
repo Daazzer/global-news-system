@@ -113,6 +113,7 @@ function UserList() {
             onConfirm={() => handleDel(row)}
             okText="是"
             cancelText="否"
+            disabled={row.default === DefaultUser.YES}
           >
             <Button
               danger
