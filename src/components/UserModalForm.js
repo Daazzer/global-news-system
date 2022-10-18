@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, ReactNode } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Modal, Form, Input, Select } from 'antd';
 import PropTypes from 'prop-types';
 import { addUser, getRegions, getRoles, setUser } from '@/api/userList';
@@ -9,7 +9,7 @@ const { Option } = Select;
  * 用户模态框表单
  * @param {object} props
  * @param {import("rc-field-form").FormInstance} props.form
- * @returns {ReactNode}
+ * @returns {import("react").ReactNode}
  */
 function UserModalForm({
   data,
@@ -69,6 +69,13 @@ function UserModalForm({
     initAllRegions();
     initRoles();
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      const roleId = form.getFieldValue('roleId');
+      setRoleId(roleId);
+    }
+  }, [open, form]);
 
   return (
     <Modal
