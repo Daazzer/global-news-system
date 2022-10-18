@@ -1,34 +1,28 @@
 import { useEffect, useState } from 'react';
-import { Table, Switch } from 'antd';
+import { Table, Switch, Button } from 'antd';
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { getUsers } from '@/api/login';
 import { setUser } from '@/api/user';
-
-const pagination = {
-  pageNum: 1,
-  pageSize: 5
-};
+import { getOptionsLabel } from '@/utils';
+import { DefaultUser, Region } from '@/utils/enums';
+import style from './UserList.module.scss';
 
 function UserList() {
   const [dataSource, setDataSource] = useState([]);
-  const init = async (_page = pagination.pageNum, _limit = pagination.pageSize) => {
-    const res = await getUsers({
-      _page,
-      _limit
-    });
-    pagination.pageNum = _page;
+
+  const init = async () => {
+    const res = await getUsers();
     const dataSource = res.data;
     setDataSource(dataSource);
   };
 
   const handleUserStateChange = async (value, row) => {
-    const state = value ? 1 : 0;
-
     await setUser({
       id: row.id,
-      state
+      state: value ? 1 : 0
     });
 
-    init(pagination.pageNum);
+    init();
   };
 
   useEffect(() => {
@@ -40,6 +34,7 @@ function UserList() {
       title: '区域',
       dataIndex: 'region',
       key: 'region',
+      render: value => getOptionsLabel(value, Region.options)
     },
     {
       title: '角色名称',
@@ -55,27 +50,51 @@ function UserList() {
       title: '用户状态',
       dataIndex: 'state',
       key: 'state',
-      render: (value, row) => <Switch
-        checked={value}
-        onChange={value => handleUserStateChange(value, row)}
-      />
+      render: (value, row) => (
+        <Switch
+          disabled={row.default === DefaultUser.YES}
+          checked={value}
+          onChange={value => handleUserStateChange(value, row)}
+        />
+      )
     },
     {
       title: '操作',
-      key: 'action'
+      key: 'option',
+      render: row => (
+        <div className={style.option}>
+          <Button
+            className="option__button"
+            type="primary"
+            shape="circle"
+            disabled={row.default === DefaultUser.YES}
+            icon={<EditOutlined />}
+          />
+          <Button
+            danger
+            className="option__button"
+            type="primary"
+            shape="circle"
+            disabled={row.default === DefaultUser.YES}
+            icon={<DeleteOutlined />}
+          />
+        </div>
+      )
     }
   ];
 
   return (
-    <div className="user-list">
+    <div className={style.userList}>
+      <Button
+        className="user-list__button"
+        type="primary"
+        icon={<PlusOutlined />}
+      >添加用户</Button>
       <Table
+        pagination={false}
         dataSource={dataSource}
         columns={columns}
         rowKey={row => row.id}
-        pagination={{
-          pageSize: pagination.pageSize,
-          onChange: init
-        }}
       />
     </div>
   );
