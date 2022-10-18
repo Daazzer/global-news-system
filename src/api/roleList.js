@@ -7,3 +7,5 @@ export const addRole = data => http.post('/roles', {
 });
 
 export const setRole = (id, data) => http.patch(`/roles/${id}`, data);
+
+export const delRole = id => http.delete(`/roles/${id}`);

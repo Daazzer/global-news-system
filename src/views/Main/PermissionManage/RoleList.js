@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Popconfirm, Table, Form } from 'antd';
+import { Button, Popconfirm, Table, Form, message } from 'antd';
 import { KeyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { getRoles } from '@/api/userList';
 import style from './RoleList.module.scss';
 import RoleModalForm from '@/components/RoleModalForm';
 import { Role } from '@/utils/enums';
 import PermissionsModal from '@/components/PermissionsModal';
+import { delRole } from '@/api/roleList';
 
 /**
  * 角色列表
@@ -24,7 +25,11 @@ function RoleList() {
     setDataSource(dataSource);
   };
 
-  const handleDel = () => { };
+  const handleDel = async row => {
+    await delRole(row.id);
+    message.success('删除角色成功');
+    initDataSource();
+  };
 
   const handleAddOk = () => {
     initDataSource();
