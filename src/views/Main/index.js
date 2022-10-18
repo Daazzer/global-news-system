@@ -12,12 +12,9 @@ function Main() {
   return (
     <Spin
       size="large"
-      style={{ maxHeight: '100%' }}
       spinning={loading}
-      indicator={<LoadingOutlined
-        style={{ fontSize: 32 }}
-        spin
-      />}
+      wrapperClassName={style.loading}
+      indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />}
     >
       <Layout className={style.main}>
         <Siderbar />
