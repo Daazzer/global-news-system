@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Popconfirm, Table, Form, Input, message } from 'antd';
+import { Button, Popconfirm, Table, Form } from 'antd';
 import { KeyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import style from './RoleList.module.scss';
 import { getRoles } from '@/api/userList';
-import { addRole } from '@/api/roleList';
+import style from './RoleList.module.scss';
+import RoleModalForm from '@/components/RoleModalForm';
+import { Role } from '@/utils/enums';
 
 /**
  * 角色列表
@@ -12,7 +13,7 @@ import { addRole } from '@/api/roleList';
 function RoleList() {
   const [addForm] = Form.useForm();
   const [dataSource, setDataSource] = useState([]);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isAddModalFormOpen, setIsAddModalFormOpen] = useState(false);
 
   const initDataSource = async () => {
     const res = await getRoles();
@@ -22,17 +23,14 @@ function RoleList() {
 
   const handleDel = () => {};
 
-  const handleAddOk = async () => {
-    const addFormData = await addForm.validateFields();
-    await addRole(addFormData);
-    message.success('添加角色成功');
-    handleAddCancel();
+  const handleAddOk = () => {
     initDataSource();
+    handleAddCancel();
   };
 
   const handleAddCancel = () => {
+    setIsAddModalFormOpen(false);
     addForm.resetFields();
-    setIsAddModalOpen(false);
   };
 
   useEffect(() => {
@@ -59,6 +57,7 @@ function RoleList() {
             className="option__button"
             type="primary"
             shape="circle"
+            disabled={row.id === Role.ADMIN}
             icon={<KeyOutlined />}
           />
           <Popconfirm
@@ -66,12 +65,14 @@ function RoleList() {
             onConfirm={() => handleDel(row)}
             okText="确定"
             cancelText="取消"
+            disabled={row.id === Role.ADMIN}
           >
             <Button
               danger
               className="option__button"
               type="primary"
               shape="circle"
+              disabled={row.id === Role.ADMIN}
               icon={<DeleteOutlined />}
             />
           </Popconfirm>
@@ -86,7 +87,7 @@ function RoleList() {
         className="role-list__button"
         type="primary"
         icon={<PlusOutlined />}
-        onClick={() => setIsAddModalOpen(true)}
+        onClick={() => setIsAddModalFormOpen(true)}
       >添加角色</Button>
       <Table
         pagination={{ pageSize: 5 }}
@@ -94,34 +95,12 @@ function RoleList() {
         columns={columns}
         rowKey={row => row.id}
       />
-      <Modal
-        forceRender
-        title="添加角色"
-        okText="确定"
-        cancelText="取消"
-        open={isAddModalOpen}
+      <RoleModalForm 
+        open={isAddModalFormOpen}
+        form={addForm}
         onOk={handleAddOk}
         onCancel={handleAddCancel}
-      >
-        <Form
-          form={addForm}
-          layout="vertical"
-          name="addForm"
-        >
-          <Form.Item
-            name="name"
-            label="角色名称"
-            rules={[
-              {
-                required: true,
-                message: '角色名称不能为空'
-              }
-            ]}
-          >
-            <Input maxLength={30} />
-          </Form.Item>
-        </Form>
-      </Modal>
+      />
     </div>
   );
 }
