@@ -19,7 +19,6 @@ import AuditList from '@/views/Main/AuditManage/AuditList';
 import Unpublished from '@/views/Main/PublishMange/Unpublished';
 import Published from '@/views/Main/PublishMange/Published';
 import Revoked from '@/views/Main/PublishMange/Revoked';
-import Test11 from '@/views/Main/Test/Test1/Test11';
 import NotFound from '@/views/NotFound';
 import style from './index.module.scss';
 
@@ -37,8 +36,7 @@ const viewsMap = {
   '/audit-manage/audit-list': AuditList,
   '/publish-manage/unpublished': Unpublished,
   '/publish-manage/published': Published,
-  '/publish-manage/revoked': Revoked,
-  '/test/test1/test11': Test11
+  '/publish-manage/revoked': Revoked
 };
 
 const getRoutes = tree => {
