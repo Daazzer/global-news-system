@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Modal, Form, Input, Select } from 'antd';
+import PropTypes from 'prop-types';
 import { getRegions, getRoles } from '@/api/main';
 import { Region, Role } from '@/utils/enums';
 
@@ -129,5 +130,13 @@ function UserModalForm({ form, title, open, onCancel, onOk }) {
     </Modal>
   );
 }
+
+UserModalForm.propTypes = {
+  form: PropTypes.object,
+  title: PropTypes.string,
+  open: PropTypes.bool,
+  onCancel: PropTypes.func,
+  onOk: PropTypes.func
+};
 
 export default UserModalForm;
