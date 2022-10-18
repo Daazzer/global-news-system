@@ -5,6 +5,7 @@ import { getRoles } from '@/api/userList';
 import style from './RoleList.module.scss';
 import RoleModalForm from '@/components/RoleModalForm';
 import { Role } from '@/utils/enums';
+import PermissionsModal from '@/components/PermissionsModal';
 
 /**
  * 角色列表
@@ -12,8 +13,10 @@ import { Role } from '@/utils/enums';
  */
 function RoleList() {
   const [addForm] = Form.useForm();
+  const [permissionsModalData, setPermissionsModalData] = useState({});
   const [dataSource, setDataSource] = useState([]);
   const [isAddModalFormOpen, setIsAddModalFormOpen] = useState(false);
+  const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false);
 
   const initDataSource = async () => {
     const res = await getRoles();
@@ -21,7 +24,7 @@ function RoleList() {
     setDataSource(dataSource);
   };
 
-  const handleDel = () => {};
+  const handleDel = () => { };
 
   const handleAddOk = () => {
     initDataSource();
@@ -31,6 +34,16 @@ function RoleList() {
   const handleAddCancel = () => {
     setIsAddModalFormOpen(false);
     addForm.resetFields();
+  };
+
+  const handleEditPermissions = row => {
+    setPermissionsModalData(row);
+    setIsPermissionsModalOpen(true);
+  };
+
+  const handleEditPermissionsOk = () => {
+    setIsPermissionsModalOpen(false);
+    initDataSource();
   };
 
   useEffect(() => {
@@ -59,6 +72,7 @@ function RoleList() {
             shape="circle"
             disabled={row.id === Role.ADMIN}
             icon={<KeyOutlined />}
+            onClick={() => handleEditPermissions(row)}
           />
           <Popconfirm
             title={`你确定要删除“${row.name}”角色吗？`}
@@ -95,11 +109,18 @@ function RoleList() {
         columns={columns}
         rowKey={row => row.id}
       />
-      <RoleModalForm 
+      <RoleModalForm
         open={isAddModalFormOpen}
         form={addForm}
         onOk={handleAddOk}
         onCancel={handleAddCancel}
+      />
+      <PermissionsModal
+        data={permissionsModalData}
+        open={isPermissionsModalOpen}
+        onCheck={checkedKeys => setPermissionsModalData({ ...permissionsModalData, permissions: checkedKeys })}
+        onOk={handleEditPermissionsOk}
+        onCancel={() => setIsPermissionsModalOpen(false)}
       />
     </div>
   );

@@ -5,3 +5,5 @@ export const addRole = data => http.post('/roles', {
   permissions: [],
   ...data
 });
+
+export const setRole = (id, data) => http.patch(`/roles/${id}`, data);
