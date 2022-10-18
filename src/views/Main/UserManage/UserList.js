@@ -4,7 +4,7 @@ import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { getUsers } from '@/api/login';
 import { setUser } from '@/api/user';
 import { getOptionsLabel } from '@/utils';
-import { DefaultUser, Region } from '@/utils/enums';
+import { DefaultUser, Region, UserState } from '@/utils/enums';
 import UserModalForm from '@/components/UserModalForm';
 import style from './UserList.module.scss';
 
@@ -41,7 +41,7 @@ function UserList() {
   const handleUserStateChange = async (value, row) => {
     await setUser({
       id: row.id,
-      state: value ? 1 : 0
+      state: value ? UserState.ENABLED : UserState.DISABLED
     });
 
     initDataSource();

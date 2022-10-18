@@ -83,3 +83,15 @@ export const Region = {
     ];
   }
 };
+
+/**
+ * 用户状态
+ * @readonly
+ * @enum {number}
+ */
+export const UserState = {
+  /** 停用 */
+  DISABLED: 0,
+  /** 启用 */
+  ENABLED: 1
+};
