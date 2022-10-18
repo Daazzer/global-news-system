@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Table, Switch, Button, Form, message } from 'antd';
+import { Table, Switch, Button, Form, message, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { getUsers } from '@/api/login';
-import { setUser } from '@/api/userList';
+import { delUser, setUser } from '@/api/userList';
 import { getOptionsLabel } from '@/utils';
 import { DefaultUser, Region, UserState } from '@/utils/enums';
 import UserModalForm from '@/components/UserModalForm';
@@ -32,6 +32,12 @@ function UserList() {
       form.setFieldsValue(formData);
       setUserModalformData(data);
     }
+  };
+
+  const handleDel = async row => {
+    await delUser(row.id);
+    initDataSource();
+    message.success('删除用户成功');
   };
 
   /** 初始化列表数据 */
@@ -102,14 +108,21 @@ function UserList() {
             icon={<EditOutlined />}
             onClick={() => handleModalOpen('edit', row)}
           />
-          <Button
-            danger
-            className="option__button"
-            type="primary"
-            shape="circle"
-            disabled={row.default === DefaultUser.YES}
-            icon={<DeleteOutlined />}
-          />
+          <Popconfirm
+            title="你确定要删除此用户吗？"
+            onConfirm={() => handleDel(row)}
+            okText="是"
+            cancelText="否"
+          >
+            <Button
+              danger
+              className="option__button"
+              type="primary"
+              shape="circle"
+              disabled={row.default === DefaultUser.YES}
+              icon={<DeleteOutlined />}
+            />
+          </Popconfirm>
         </div>
       )
     }

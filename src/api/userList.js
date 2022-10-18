@@ -12,3 +12,5 @@ export const addUser = data => http.post('/users', {
 });
 
 export const setUser = ({ id, ...data }) => http.patch(`/users/${id}`, data);
+
+export const delUser = id => http.delete(`/users/${id}`);
