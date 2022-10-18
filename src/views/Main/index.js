@@ -18,7 +18,7 @@ function Main() {
     >
       <Layout className={style.main}>
         <Siderbar />
-        <Layout className="site-layout">
+        <Layout>
           <HeaderBar />
           <ContentBar />
         </Layout>
