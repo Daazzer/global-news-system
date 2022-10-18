@@ -68,20 +68,20 @@ function UserList() {
 
   const columns = [
     {
+      title: '用户名',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
       title: '区域',
       dataIndex: 'region',
       key: 'region',
       render: value => getOptionsLabel(value, Region.options)
     },
     {
-      title: '角色名称',
+      title: '角色',
       dataIndex: 'role',
       render: value => value?.name
-    },
-    {
-      title: '用户名',
-      dataIndex: 'username',
-      key: 'username',
     },
     {
       title: '用户状态',
