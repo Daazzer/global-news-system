@@ -3,8 +3,10 @@
 }
 
 .loading {
-  max-height: 100%;
   :global {
+    .ant-spin {
+      max-height: 100% !important;
+    }
     .ant-spin-container {
       opacity: 1;
       &::after {
