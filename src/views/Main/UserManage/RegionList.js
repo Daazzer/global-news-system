@@ -89,7 +89,7 @@ function RegionList() {
             icon={<CloseOutlined />}
             onClick={() => setEditRowId(null)}
           />}
-          <Popconfirm
+          {editRowId !== row.id && <Popconfirm
             title={`你确定要删除“${row.name}”区域吗？`}
             onConfirm={() => handleDel(row)}
             okText="确定"
@@ -104,7 +104,7 @@ function RegionList() {
               disabled={row.default === SystemDefault.YES}
               icon={<DeleteOutlined />}
             />
-          </Popconfirm>
+          </Popconfirm>}
         </div>
       )
     }
