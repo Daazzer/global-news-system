@@ -15,7 +15,7 @@ export const setAllPermissions = async (dispatch, getState) => {
   const userPermissions = permissions.filter(permission => {
     if (rolePermissions.includes('*')) return true;
     return (
-      rolePermissions.includes(permission) &&
+      rolePermissions.includes(permission.id) &&
       permission.state === PermissionState.ENABLED
     );
   });
