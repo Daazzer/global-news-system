@@ -120,7 +120,6 @@ function RegionList() {
       >添加区域</Button>
       <Form form={regionForm}>
         <Table
-          rowClassName={() => 'editable-row'}
           pagination={{ pageSize: 5 }}
           rowKey={row => row.id}
           dataSource={dataSource}
