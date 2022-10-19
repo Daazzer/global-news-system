@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Table, Switch, Button, Form, message, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { getUsers } from '@/api/login';
@@ -17,13 +18,20 @@ function UserList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('添加用户');
   const [userModalformData, setUserModalformData] = useState(null);
+  const { user } = useSelector(state => state.login);
 
   /** 初始化列表数据 */
-  const initDataSource = async () => {
+  const initDataSource = useCallback(async () => {
     const res = await getUsers({ _expand: ['role', 'region'] });
-    const dataSource = res.data;
+    const { regionId, role: { menus } } = user;
+    const dataSource = res.data.filter(item => {
+      if (menus.includes('*')) {
+        return true;
+      }
+      return item.regionId === regionId;
+    });
     setDataSource(dataSource);
-  };
+  }, [user]);
 
   const handleUserStateChange = async (value, row) => {
     await setUser({
@@ -56,7 +64,7 @@ function UserList() {
   const handleUserModalFormOk = () => {
     message.success(`${userModalformData ? '修改' : '添加'}用户成功`);
     setIsModalOpen(false);
-    initDataSource();
+    setTimeout(initDataSource);
   };
 
   const handleDel = async row => {
@@ -67,7 +75,7 @@ function UserList() {
 
   useEffect(() => {
     initDataSource();
-  }, []);
+  }, [initDataSource]);
 
   const columns = [
     {
