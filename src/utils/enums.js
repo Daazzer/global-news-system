@@ -95,3 +95,15 @@ export const UserState = {
   /** 启用 */
   ENABLED: 1
 };
+
+/**
+ * 权限状态
+ * @readonly
+ * @enum {number}
+ */
+export const PermissionState = {
+  /** 停用 */
+  DISABLED: 0,
+  /** 启用 */
+  ENABLED: 1
+};

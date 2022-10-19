@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Popconfirm, Table } from 'antd';
+import { Button, Popconfirm, Table, Switch } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import style from './PermissionList.module.scss';
 import { getAssembleTree } from '@/utils';
+import { setPermission } from '@/api/permissionList';
 
 /**
  * 权限列表
@@ -13,8 +14,14 @@ function PermissionList() {
   const { allPermissions } = useSelector(state => state.main);
   const [dataSource, setDataSource] = useState([]);
 
+  const handleStateChange = async (value, row) => {
+    await setPermission(row.id, {
+      state: value
+    });
+  };
+
   const handleDel = row => {
-    
+
   };
 
   useEffect(() => {
@@ -37,6 +44,15 @@ function PermissionList() {
       title: '权限标识',
       dataIndex: 'key',
       key: 'key'
+    },
+    {
+      title: '权限状态',
+      dataIndex: 'state',
+      key: 'state',
+      render: (value, row) => <Switch
+        checked={value}
+        onChange={value => handleStateChange(value, row)}
+      />
     },
     {
       title: '操作',

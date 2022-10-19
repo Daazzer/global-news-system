@@ -1,6 +1,24 @@
+import { getPermissions } from '@/api/user';
+import { PermissionState } from '@/utils/enums';
+
 const initState = {
-  allPermissions: [],  // 所有权限
-  permissions: []  // 当前用户权限
+  permissions: [],  // 所有权限
+  userPermissions: []  // 当前用户权限
+};
+
+export const setAllPermissions = rolePermissions => async dispatch => {
+  const res = await getPermissions();
+  const permissions = res.data;
+  // 判断当前用户的权限
+  const userPermissions = rolePermissions.includes('*')
+    ? permissions
+    : permissions.filter(permission =>
+      rolePermissions.includes(permission) &&
+      permission === PermissionState.ENABLED
+    );
+
+  dispatch({ type: 'main/SET_PERMISSIONS', payload: permissions });
+  dispatch({ type: 'main/SET_USER_PERMISSIONS', payload: userPermissions });
 };
 
 /**
@@ -10,10 +28,10 @@ const initState = {
  */
 const mainReducer = (state = initState, action) => {
   switch (action.type) {
-    case 'main/SET_ALL_PERMISSIONS':
-      return { ...state, allPermissions: action.payload };
     case 'main/SET_PERMISSIONS':
       return { ...state, permissions: action.payload };
+    case 'main/SET_USER_PERMISSIONS':
+      return { ...state, userPermissions: action.payload };
     default:
       return state;
   }

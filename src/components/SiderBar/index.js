@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -14,10 +14,10 @@ import {
   AuditOutlined,
   CommentOutlined
 } from '@ant-design/icons';
-import { getPermissions } from '@/api/user';
 import { getAssembleTree } from '@/utils';
 import logo from '@/assets/logo.svg';
 import style from './index.module.scss';
+import { setAllPermissions } from '@/store/reducers/mainReducer';
 
 const { Sider } = Layout;
 const logoText = '全球新闻发布管理系统';
@@ -70,26 +70,18 @@ function SiderBar() {
   const [menus, setMenus] = useState([]);
   const { user } = useSelector(state => state.login);
   const { collapsed } = useSelector(state => state.style);
+  const { userPermissions } = useSelector(state => state.main);
 
-  const init = useCallback(async () => {
-    const res = await getPermissions();
-    const allPermissions = res.data;
-    const userPermissions = user?.role.permissions || [];
-    // 判断当前用户的权限
-    const permissions = userPermissions.includes('*')
-      ? allPermissions
-      : allPermissions.filter(permission => userPermissions.includes(permission));
-    const menusTree = getAssembleTree(permissions);
-    const menus = getMenus(menusTree);
-
-    dispatch({ type: 'main/SET_PERMISSIONS', payload: permissions });
-    dispatch({ type: 'main/SET_ALL_PERMISSIONS', payload: allPermissions });
-    setMenus(menus);
+  useEffect(() => {
+    const rolePermissions = user?.role.permissions || [];
+    dispatch(setAllPermissions(rolePermissions));
   }, [user, dispatch]);
 
   useEffect(() => {
-    init();
-  }, [init]);
+    const menusTree = getAssembleTree(userPermissions);
+    const menus = getMenus(menusTree);
+    setMenus(menus);
+  }, [userPermissions]);
 
   return (
     <Sider

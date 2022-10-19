@@ -24,7 +24,7 @@ const getTreeData = tree => {
  */
 function PermissionsModalTree({ open, data, onOk, onCancel, onCheck }) {
   const [treeData, setTreeData] = useState([]);
-  const { allPermissions } = useSelector(state => state.main);
+  const { permissions } = useSelector(state => state.main);
 
   const handleOk = async () => {
     const { id, permissions } = data;
@@ -34,10 +34,10 @@ function PermissionsModalTree({ open, data, onOk, onCancel, onCheck }) {
   };
 
   useEffect(() => {
-    const allPermissionsTree = getAssembleTree(allPermissions);
-    const treeData = getTreeData(allPermissionsTree);
+    const permissionsTree = getAssembleTree(permissions);
+    const treeData = getTreeData(permissionsTree);
     setTreeData(treeData);
-  }, [allPermissions]);
+  }, [permissions]);
 
   return (
     <Modal
