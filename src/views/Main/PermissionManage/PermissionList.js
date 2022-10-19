@@ -1,28 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Button, Popconfirm, Table } from 'antd';
-import { KeyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { Role } from '@/utils/enums';
-import { getRoles } from '@/api/userList';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import style from './PermissionList.module.scss';
+import { getAssembleTree } from '@/utils';
 
 /**
  * 权限列表
  * @returns {React.ReactNode}
  */
 function PermissionList() {
+  const { allPermissions } = useSelector(state => state.main);
   const [dataSource, setDataSource] = useState([]);
 
-  const initDataSource = async () => {
-    const res = await getRoles();
-    const dataSource = res.data;
-    setDataSource(dataSource);
+  const handleDel = row => {
+    
   };
 
-  const handleDel = row => {};
-
   useEffect(() => {
-    initDataSource();
-  }, []);
+    const dataSource = getAssembleTree(allPermissions);
+    setDataSource(dataSource);
+  }, [allPermissions]);
 
   const columns = [
     {
@@ -31,9 +29,14 @@ function PermissionList() {
       key: 'id'
     },
     {
-      title: '角色名称',
+      title: '权限名称',
       dataIndex: 'name',
       key: 'name'
+    },
+    {
+      title: '权限标识',
+      dataIndex: 'key',
+      key: 'key'
     },
     {
       title: '操作',
@@ -44,22 +47,25 @@ function PermissionList() {
             className="option__button"
             type="primary"
             shape="circle"
-            disabled={row.id === Role.ADMIN}
-            icon={<KeyOutlined />}
+            icon={<PlusOutlined />}
+          />
+          <Button
+            className="option__button"
+            type="primary"
+            shape="circle"
+            icon={<EditOutlined />}
           />
           <Popconfirm
             title={`你确定要删除“${row.name}”角色吗？`}
             onConfirm={() => handleDel(row)}
             okText="确定"
             cancelText="取消"
-            disabled={row.id === Role.ADMIN}
           >
             <Button
               danger
               className="option__button"
               type="primary"
               shape="circle"
-              disabled={row.id === Role.ADMIN}
               icon={<DeleteOutlined />}
             />
           </Popconfirm>
@@ -76,7 +82,8 @@ function PermissionList() {
         icon={<PlusOutlined />}
       >添加权限</Button>
       <Table
-        pagination={{ pageSize: 5 }}
+        pagination={false}
+        scroll={{ y: 480 }}
         dataSource={dataSource}
         columns={columns}
         rowKey={row => row.id}
