@@ -81,6 +81,7 @@ function UserModalForm({
   return (
     <Modal
       forceRender
+      getContainer={false}
       title={title}
       open={open}
       onOk={handleModalOk}
