@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Popconfirm, Table, Switch } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import style from './PermissionList.module.scss';
 import { getAssembleTree } from '@/utils';
 import { setPermission } from '@/api/permissionList';
+import { setAllPermissions } from '@/store/reducers/mainReducer';
+import { PermissionState } from '@/utils/enums';
 
 /**
  * 权限列表
  * @returns {React.ReactNode}
  */
 function PermissionList() {
-  const { allPermissions } = useSelector(state => state.main);
+  const dispatch = useDispatch();
+  const { permissions } = useSelector(state => state.main);
   const [dataSource, setDataSource] = useState([]);
 
   const handleStateChange = async (value, row) => {
     await setPermission(row.id, {
-      state: value
+      state: value ? PermissionState.ENABLED : PermissionState.DISABLED
     });
+    dispatch(setAllPermissions);
   };
 
   const handleDel = row => {
@@ -25,9 +29,9 @@ function PermissionList() {
   };
 
   useEffect(() => {
-    const dataSource = getAssembleTree(allPermissions);
+    const dataSource = getAssembleTree(permissions);
     setDataSource(dataSource);
-  }, [allPermissions]);
+  }, [permissions]);
 
   const columns = [
     {
@@ -57,6 +61,7 @@ function PermissionList() {
     {
       title: '操作',
       key: 'option',
+      width: 180,
       render: row => (
         <div className={style.option}>
           <Button
@@ -91,9 +96,9 @@ function PermissionList() {
   ];
 
   return (
-    <div className={style.roleList}>
+    <div className={style.permissionList}>
       <Button
-        className="role-list__button"
+        className="permission-list__button"
         type="primary"
         icon={<PlusOutlined />}
       >添加权限</Button>

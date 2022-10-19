@@ -31,7 +31,7 @@ const iconMap = {
 };
 
 const getMenus = permissions => {
-  const fn = (permissions, paths = []) => permissions.map(permission => {
+  const fn = (permissions, paths = []) => permissions.reduce((menus, permission) => {
     const { children, key, name: label } = permission;
     const menu = {
       key,
@@ -46,8 +46,8 @@ const getMenus = permissions => {
       menu.label = <Link to={path}>{label}</Link>;
     }
 
-    return menu;
-  });
+    return menus.concat(menu);
+  }, []);
 
   return fn(permissions);
 };
@@ -68,14 +68,12 @@ function SiderBar() {
   const dispatch = useDispatch();
   const { defaultOpenKeys, selectedKeys } = useKeys();
   const [menus, setMenus] = useState([]);
-  const { user } = useSelector(state => state.login);
   const { collapsed } = useSelector(state => state.style);
   const { userPermissions } = useSelector(state => state.main);
 
   useEffect(() => {
-    const rolePermissions = user?.role.permissions || [];
-    dispatch(setAllPermissions(rolePermissions));
-  }, [user, dispatch]);
+    dispatch(setAllPermissions);
+  }, [dispatch]);
 
   useEffect(() => {
     const menusTree = getAssembleTree(userPermissions);

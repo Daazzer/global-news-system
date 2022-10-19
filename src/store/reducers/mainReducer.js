@@ -6,16 +6,19 @@ const initState = {
   userPermissions: []  // 当前用户权限
 };
 
-export const setAllPermissions = rolePermissions => async dispatch => {
+export const setAllPermissions = async (dispatch, getState) => {
   const res = await getPermissions();
   const permissions = res.data;
+  const { user } = getState().login;
+  const rolePermissions = user?.role.permissions || [];
   // 判断当前用户的权限
-  const userPermissions = rolePermissions.includes('*')
-    ? permissions
-    : permissions.filter(permission =>
+  const userPermissions = permissions.filter(permission => {
+    if (rolePermissions.includes('*')) return true;
+    return (
       rolePermissions.includes(permission) &&
-      permission === PermissionState.ENABLED
+      permission.state === PermissionState.ENABLED
     );
+  });
 
   dispatch({ type: 'main/SET_PERMISSIONS', payload: permissions });
   dispatch({ type: 'main/SET_USER_PERMISSIONS', payload: userPermissions });
@@ -24,7 +27,8 @@ export const setAllPermissions = rolePermissions => async dispatch => {
 /**
  * 后台主页模块
  * @param {object} state
- * @param {import("redux").Action} action 
+ * @param {import("redux").Action} action
+ * @returns {object}
  */
 const mainReducer = (state = initState, action) => {
   switch (action.type) {
