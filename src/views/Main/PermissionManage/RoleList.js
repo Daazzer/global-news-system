@@ -3,7 +3,7 @@ import { Button, Popconfirm, Table, Form, message } from 'antd';
 import { KeyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import RoleModalForm from '@/components/RoleModalForm';
 import MenusModalTree from '@/components/MenusModalTree';
-import { Role } from '@/utils/enums';
+import { SystemDefault } from '@/utils/enums';
 import { getRoles } from '@/api/userList';
 import { delRole } from '@/api/roleList';
 import style from './RoleList.module.scss';
@@ -75,7 +75,7 @@ function RoleList() {
             className="option__button"
             type="primary"
             shape="circle"
-            disabled={row.id === Role.ADMIN}
+            disabled={row.default === SystemDefault.YES}
             icon={<KeyOutlined />}
             onClick={() => handleEditMenus(row)}
           />
@@ -84,14 +84,14 @@ function RoleList() {
             onConfirm={() => handleDel(row)}
             okText="确定"
             cancelText="取消"
-            disabled={row.id === Role.ADMIN}
+            disabled={row.default === SystemDefault.YES}
           >
             <Button
               danger
               className="option__button"
               type="primary"
               shape="circle"
-              disabled={row.id === Role.ADMIN}
+              disabled={row.default === SystemDefault.YES}
               icon={<DeleteOutlined />}
             />
           </Popconfirm>
