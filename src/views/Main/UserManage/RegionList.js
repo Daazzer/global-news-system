@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Table, Switch, Button, Form, message, Popconfirm } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Table, Button, Form, message, Popconfirm } from 'antd';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { getUsers } from '@/api/login';
-import { delUser, setUser } from '@/api/userList';
-import { SystemDefault, SystemState } from '@/utils/enums';
+import { delUser } from '@/api/userList';
+import { SystemDefault } from '@/utils/enums';
 import UserModalForm from '@/components/UserModalForm';
-import style from './UserList.module.scss';
+import style from './RegionList.module.scss';
 
 /**
- * 用户列表
+ * 区域列表
  * @returns {React.ReactNode}
  */
-function UserList() {
+function RegionList() {
   const [form] = Form.useForm();
   const [dataSource, setDataSource] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,15 +32,6 @@ function UserList() {
     });
     setDataSource(dataSource);
   }, [user]);
-
-  const handleUserStateChange = async (value, row) => {
-    await setUser({
-      id: row.id,
-      state: value ? SystemState.ENABLED : SystemState.DISABLED
-    });
-
-    initDataSource();
-  };
 
   const handleUserModalFormOpen = (type, data) => {
     const { roleId, regionId, username, password } = data || {};
@@ -79,48 +70,23 @@ function UserList() {
 
   const columns = [
     {
-      title: '用户名',
-      dataIndex: 'username',
-      key: 'username',
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
-      title: '区域',
-      dataIndex: 'region',
-      key: 'region',
-      render: value => value?.name
-    },
-    {
-      title: '角色',
-      dataIndex: 'role',
-      render: value => value?.name
-    },
-    {
-      title: '用户状态',
-      dataIndex: 'state',
-      key: 'state',
-      render: (value, row) => (
-        <Switch
-          disabled={row.default === SystemDefault.YES}
-          checked={value}
-          onChange={value => handleUserStateChange(value, row)}
-        />
-      )
+      title: '区域名',
+      dataIndex: 'name',
+      key: 'name',
+      render: value => value?.label
     },
     {
       title: '操作',
       key: 'option',
       render: row => (
         <div className={style.option}>
-          <Button
-            className="option__button"
-            type="primary"
-            shape="circle"
-            disabled={row.default === SystemDefault.YES}
-            icon={<EditOutlined />}
-            onClick={() => handleUserModalFormOpen('edit', row)}
-          />
           <Popconfirm
-            title={`你确定要删除用户“${row.username}”吗？`}
+            title={`你确定要删除“${row.name}”区域吗？`}
             onConfirm={() => handleDel(row)}
             okText="确定"
             cancelText="取消"
@@ -141,9 +107,9 @@ function UserList() {
   ];
 
   return (
-    <div className={style.userList}>
+    <div className={style.regionList}>
       <Button
-        className="user-list__button"
+        className="region-list__button"
         type="primary"
         icon={<PlusOutlined />}
         onClick={() => handleUserModalFormOpen('add')}
@@ -166,4 +132,4 @@ function UserList() {
   );
 }
 
-export default UserList;
+export default RegionList;

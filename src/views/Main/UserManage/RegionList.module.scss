@@ -1,0 +1,17 @@
+.regionList {
+  :global {
+    .region-list__button {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.option {
+  :global {
+    .option__button {
+      & + .option__button {
+        margin-left: 15px;
+      }
+    }
+  }
+}

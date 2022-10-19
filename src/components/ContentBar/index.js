@@ -9,6 +9,7 @@ import { Layout } from 'antd';
 import { getAssembleTree } from '@/utils';
 import Home from '@/views/Main/Home';
 import UserList from '@/views/Main/UserManage/UserList';
+import RegionList from '@/views/Main/UserManage/RegionList';
 import RoleList from '@/views/Main/PermissionManage/RoleList';
 import MenuList from '@/views/Main/PermissionManage/MenuList';
 import NewsAdd from '@/views/Main/NewsManage/NewsAdd';
@@ -27,6 +28,7 @@ const { Content } = Layout;
 const viewsMap = {
   '/home': Home,
   '/user-manage/user-list': UserList,
+  '/user-manage/region-list': RegionList,
   '/permission-manage/role-list': RoleList,
   '/permission-manage/menu-list': MenuList,
   '/news-manage/news-add': NewsAdd,

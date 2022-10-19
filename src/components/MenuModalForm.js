@@ -32,6 +32,7 @@ function MenuModalForm({ state, open, data, form, onOk, onCancel }) {
       forceRender
       okText="确定"
       cancelText="取消"
+      getContainer={false}
       title={title}
       open={open}
       onOk={handleOk}

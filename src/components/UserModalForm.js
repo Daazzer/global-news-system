@@ -133,7 +133,7 @@ function UserModalForm({
               <Option
                 key={region.id}
                 value={region.id}
-              >{region.label}</Option>
+              >{region.name}</Option>
             )}
           </Select>
         </Form.Item>
