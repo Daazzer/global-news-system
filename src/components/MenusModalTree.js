@@ -19,17 +19,17 @@ const getTreeData = tree => {
 };
 
 /**
- * 权限树模态框
+ * 菜单树模态框
  * @returns {React.ReactNode}
  */
-function PermissionsModalTree({ open, data, onOk, onCancel, onCheck }) {
+function MenusModalTree({ open, data, onOk, onCancel, onCheck }) {
   const [treeData, setTreeData] = useState([]);
   const { permissions } = useSelector(state => state.main);
 
   const handleOk = async () => {
     const { id, permissions } = data;
     await setRole(id, { permissions });
-    message.success('权限分配成功');
+    message.success('菜单分配成功');
     onOk();
   };
 
@@ -41,7 +41,7 @@ function PermissionsModalTree({ open, data, onOk, onCancel, onCheck }) {
 
   return (
     <Modal
-      title="权限分配"
+      title="菜单分配"
       okText="确定"
       cancelText="取消"
       open={open}
@@ -58,4 +58,4 @@ function PermissionsModalTree({ open, data, onOk, onCancel, onCheck }) {
   );
 }
 
-export default PermissionsModalTree;
+export default MenusModalTree;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Popconfirm, Table, Form, message } from 'antd';
 import { KeyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import RoleModalForm from '@/components/RoleModalForm';
-import PermissionsModalTree from '@/components/PermissionsModalTree';
+import MenusModalTree from '@/components/MenusModalTree';
 import { Role } from '@/utils/enums';
 import { getRoles } from '@/api/userList';
 import { delRole } from '@/api/roleList';
@@ -14,10 +14,10 @@ import style from './RoleList.module.scss';
  */
 function RoleList() {
   const [addForm] = Form.useForm();
-  const [permissionsModalData, setPermissionsModalData] = useState({});
+  const [menusModalData, setMenusModalData] = useState({});
   const [dataSource, setDataSource] = useState([]);
   const [isAddModalFormOpen, setIsAddModalFormOpen] = useState(false);
-  const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false);
+  const [isMenusModalOpen, setIsMenusModalOpen] = useState(false);
 
   const initDataSource = async () => {
     const res = await getRoles();
@@ -42,12 +42,12 @@ function RoleList() {
   };
 
   const handleEditPermissions = row => {
-    setPermissionsModalData(row);
-    setIsPermissionsModalOpen(true);
+    setMenusModalData(row);
+    setIsMenusModalOpen(true);
   };
 
   const handleEditPermissionsOk = () => {
-    setIsPermissionsModalOpen(false);
+    setIsMenusModalOpen(false);
     initDataSource();
   };
 
@@ -120,12 +120,12 @@ function RoleList() {
         onOk={handleAddOk}
         onCancel={handleAddCancel}
       />
-      <PermissionsModalTree
-        data={permissionsModalData}
-        open={isPermissionsModalOpen}
-        onCheck={checkedKeys => setPermissionsModalData({ ...permissionsModalData, permissions: checkedKeys })}
+      <MenusModalTree
+        data={menusModalData}
+        open={isMenusModalOpen}
+        onCheck={checkedKeys => setMenusModalData({ ...menusModalData, permissions: checkedKeys })}
         onOk={handleEditPermissionsOk}
-        onCancel={() => setIsPermissionsModalOpen(false)}
+        onCancel={() => setIsMenusModalOpen(false)}
       />
     </div>
   );

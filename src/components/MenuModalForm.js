@@ -3,7 +3,7 @@ import { Modal, Form, Input, message } from 'antd';
 import { addPermission, setPermission } from '@/api/permissionList';
 
 /**
- * 权限信息模态框表单
+ * 菜单详情模态框
  * @returns {React.ReactNode}
  */
 function MenuModalForm({ state, open, data, form, onOk, onCancel }) {
