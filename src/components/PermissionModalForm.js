@@ -11,7 +11,7 @@ function PermissionModalForm({ state, open, data, form, onOk, onCancel }) {
     add: '添加权限',
     addSub: `添加“${data.name}”子权限`,
     edit: `修改“${data.name}”权限`
-  }[state]), [state]);
+  }[state]), [state, data]);
 
   const handleOk = async () => {
     const formData = await form.validateFields();
