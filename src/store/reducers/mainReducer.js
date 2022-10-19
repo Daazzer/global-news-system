@@ -1,9 +1,11 @@
+import { getRegions } from '@/api/regionList';
 import { getMenus } from '@/api/user';
 import { SystemState } from '@/utils/enums';
 
 const initState = {
   menus: [],  // 所有菜单权限
-  userMenus: []  // 当前用户菜单权限
+  userMenus: [],  // 当前用户菜单权限
+  regions: []  // 当前用户区域
 };
 
 export const setAllMenus = async (dispatch, getState) => {
@@ -25,6 +27,17 @@ export const setAllMenus = async (dispatch, getState) => {
   dispatch({ type: 'main/SET_USER_MENUS', payload: userMenus });
 };
 
+export const setRegions = async (dispatch, getState) => {
+  const { user } = getState().login;
+  const req = {
+    id: user.role.menus.includes('*') ? undefined : user.regionId
+  };
+  const res = await getRegions(req);
+  const regions = res.data;
+
+  dispatch({ type: 'main/SET_REGIONS', payload: regions });
+};
+
 /**
  * 后台主页模块
  * @param {object} state
@@ -37,6 +50,8 @@ const mainReducer = (state = initState, action) => {
       return { ...state, menus: action.payload };
     case 'main/SET_USER_MENUS':
       return { ...state, userMenus: action.payload };
+    case 'main/SET_REGIONS':
+      return { ...state, regions: action.payload };
     default:
       return state;
   }

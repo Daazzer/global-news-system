@@ -1,8 +1,9 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Modal, Form, Input, Select } from 'antd';
 import PropTypes from 'prop-types';
-import { addUser, getRegions, getRoles, setUser } from '@/api/userList';
+import { addUser, getRoles, setUser } from '@/api/userList';
 import { Region, Role } from '@/utils/enums';
+import { useSelector } from 'react-redux';
 
 const { Option } = Select;
 /**
@@ -20,20 +21,13 @@ function UserModalForm({
   onOk
 }) {
   const [roles, setRoles] = useState([]);
-  const [allRegions, setAllRegions] = useState([]);
+  const { regions: allRegions } = useSelector(state => state.main);
   const [roleId, setRoleId] = useState(form.getFieldValue('roleId'));
   const disabledRegion = useMemo(() => roleId === Role.ADMIN, [roleId]);
   const regions = useMemo(() => allRegions.filter(region => roleId === Role.ADMIN
     ? region.id === Region.GLOBAL
     : region.id !== Region.GLOBAL
   ), [allRegions, roleId]);
-
-  /** 初始化区域数据 */
-  const initAllRegions = async () => {
-    const res = await getRegions();
-    const allRegions = res.data;
-    setAllRegions(allRegions);
-  };
 
   /** 初始化角色数据 */
   const initRoles = async () => {
@@ -67,7 +61,6 @@ function UserModalForm({
   };
 
   useEffect(() => {
-    initAllRegions();
     initRoles();
   }, []);
 

@@ -4,9 +4,10 @@ import {
   Route,
   Redirect
 } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Layout } from 'antd';
 import { getAssembleTree } from '@/utils';
+import { setRegions } from '@/store/reducers/mainReducer';
 import Home from '@/views/Main/Home';
 import UserList from '@/views/Main/UserManage/UserList';
 import RegionList from '@/views/Main/UserManage/RegionList';
@@ -60,6 +61,7 @@ const getRoutes = menusTree => {
 };
 
 function ContentBar() {
+  const dispatch = useDispatch();
   const [routes, setRoutes] = useState([]);
   const { userMenus } = useSelector(state => state.main);
 
@@ -68,6 +70,10 @@ function ContentBar() {
     const routes = getRoutes(userMenusTree);
     setRoutes(routes);
   }, [userMenus]);
+
+  useEffect(() => {
+    dispatch(setRegions);
+  }, [dispatch]);
 
   return (
     <Content className={style.contentBar}>
