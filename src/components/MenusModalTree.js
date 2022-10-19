@@ -41,6 +41,7 @@ function MenusModalTree({ open, data, onOk, onCancel, onCheck }) {
 
   return (
     <Modal
+      forceRender
       title="菜单分配"
       okText="确定"
       cancelText="取消"
