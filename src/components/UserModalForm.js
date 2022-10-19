@@ -24,8 +24,8 @@ function UserModalForm({
   const [roleId, setRoleId] = useState(form.getFieldValue('roleId'));
   const disabledRegion = useMemo(() => roleId === Role.ADMIN, [roleId]);
   const regions = useMemo(() => allRegions.filter(region => roleId === Role.ADMIN
-    ? region.value === Region.GLOBAL
-    : region.value !== Region.GLOBAL
+    ? region.id === Region.GLOBAL
+    : region.id !== Region.GLOBAL
   ), [allRegions, roleId]);
 
   /** 初始化区域数据 */
@@ -44,10 +44,11 @@ function UserModalForm({
 
   const handleRoleIdChange = value => {
     const isAdmin = value === Role.ADMIN;
+    const regionId = form.getFieldValue('regionId');
     if (isAdmin) {
-      form.setFieldValue('region', Region.GLOBAL);
-    } else if (form.getFieldValue('region') === Region.GLOBAL) {
-      form.setFieldValue('region', null);
+      form.setFieldValue('regionId', Region.GLOBAL);
+    } else if (regionId === Region.GLOBAL) {
+      form.setFieldValue('regionId', null);
     }
     setRoleId(value);
   };
@@ -117,7 +118,7 @@ function UserModalForm({
           <Input type="password" maxLength={30} />
         </Form.Item>
         <Form.Item
-          name="region"
+          name="regionId"
           label="区域"
           rules={[
             {

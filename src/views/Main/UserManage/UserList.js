@@ -18,31 +18,6 @@ function UserList() {
   const [modalTitle, setModalTitle] = useState('添加用户');
   const [userModalformData, setUserModalformData] = useState(null);
 
-  const handleModalOpen = (type, data) => {
-    const { roleId, region, username, password } = data || {};
-    const formData = type === 'add' ? null : {
-      username,
-      password,
-      region,
-      roleId
-    };
-    setModalTitle(`${type === 'add' ? '添加' : '编辑'}用户`);
-    setIsModalOpen(true);
-    if (type === 'add') {
-      form.resetFields();
-      setUserModalformData(null);
-    } else {
-      form.setFieldsValue(formData);
-      setUserModalformData(data);
-    }
-  };
-
-  const handleDel = async row => {
-    await delUser(row.id);
-    initDataSource();
-    message.success('删除用户成功');
-  };
-
   /** 初始化列表数据 */
   const initDataSource = async () => {
     const res = await getUsers({ _expand: ['role', 'region'] });
@@ -59,10 +34,35 @@ function UserList() {
     initDataSource();
   };
 
+  const handleUserModalFormOpen = (type, data) => {
+    const { roleId, regionId, username, password } = data || {};
+    const formData = type === 'add' ? null : {
+      username,
+      password,
+      regionId,
+      roleId
+    };
+    setModalTitle(`${type === 'add' ? '添加' : '编辑'}用户`);
+    setIsModalOpen(true);
+    if (type === 'add') {
+      form.resetFields();
+      setUserModalformData(null);
+    } else {
+      form.setFieldsValue(formData);
+      setUserModalformData(data);
+    }
+  };
+
   const handleUserModalFormOk = () => {
     message.success(`${userModalformData ? '修改' : '添加'}用户成功`);
     setIsModalOpen(false);
     initDataSource();
+  };
+
+  const handleDel = async row => {
+    await delUser(row.id);
+    initDataSource();
+    message.success('删除用户成功');
   };
 
   useEffect(() => {
@@ -109,7 +109,7 @@ function UserList() {
             shape="circle"
             disabled={row.default === SystemDefault.YES}
             icon={<EditOutlined />}
-            onClick={() => handleModalOpen('edit', row)}
+            onClick={() => handleUserModalFormOpen('edit', row)}
           />
           <Popconfirm
             title={`你确定要删除用户“${row.username}”吗？`}
@@ -138,7 +138,7 @@ function UserList() {
         className="user-list__button"
         type="primary"
         icon={<PlusOutlined />}
-        onClick={() => handleModalOpen('add')}
+        onClick={() => handleUserModalFormOpen('add')}
       >添加用户</Button>
       <Table
         pagination={{ pageSize: 5 }}
