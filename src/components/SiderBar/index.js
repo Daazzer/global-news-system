@@ -17,7 +17,7 @@ import {
 import { getAssembleTree } from '@/utils';
 import logo from '@/assets/logo.svg';
 import style from './index.module.scss';
-import { setAllPermissions } from '@/store/reducers/mainReducer';
+import { setAllMenus } from '@/store/reducers/mainReducer';
 
 const { Sider } = Layout;
 const logoText = '全球新闻发布管理系统';
@@ -30,26 +30,26 @@ const iconMap = {
   'publish-manage': <CommentOutlined />
 };
 
-const getMenus = permissions => {
-  const fn = (permissions, paths = []) => permissions.reduce((menus, permission) => {
-    const { children, key, name: label } = permission;
-    const menu = {
+const getItems = menus => {
+  const fn = (menus, paths = []) => menus.reduce((items, menu) => {
+    const { children, key, name: label } = menu;
+    const item = {
       key,
       label,
       icon: iconMap[key]
     };
 
     if (children?.length) {
-      menu.children = fn(children, paths.concat(key));
+      item.children = fn(children, paths.concat(key));
     } else {
       const path = '/' + paths.concat(key).join('/');
-      menu.label = <Link to={path}>{label}</Link>;
+      item.label = <Link to={path}>{label}</Link>;
     }
 
-    return menus.concat(menu);
+    return items.concat(item);
   }, []);
 
-  return fn(permissions);
+  return fn(menus);
 };
 
 const useKeys = () => {
@@ -67,19 +67,19 @@ const useKeys = () => {
 function SiderBar() {
   const dispatch = useDispatch();
   const { defaultOpenKeys, selectedKeys } = useKeys();
-  const [menus, setMenus] = useState([]);
+  const [items, setItems] = useState([]);
   const { collapsed } = useSelector(state => state.style);
-  const { userPermissions } = useSelector(state => state.main);
+  const { userMenus } = useSelector(state => state.main);
 
   useEffect(() => {
-    dispatch(setAllPermissions);
+    dispatch(setAllMenus);
   }, [dispatch]);
 
   useEffect(() => {
-    const menusTree = getAssembleTree(userPermissions);
-    const menus = getMenus(menusTree);
-    setMenus(menus);
-  }, [userPermissions]);
+    const userMenusTree = getAssembleTree(userMenus);
+    const items = getItems(userMenusTree);
+    setItems(items);
+  }, [userMenus]);
 
   return (
     <Sider
@@ -117,7 +117,7 @@ function SiderBar() {
         className={style.sideBarMenu}
         defaultOpenKeys={defaultOpenKeys}
         selectedKeys={selectedKeys}
-        items={menus}
+        items={items}
       />
     </Sider>
   );

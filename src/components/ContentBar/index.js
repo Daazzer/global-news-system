@@ -39,8 +39,8 @@ const viewsMap = {
   '/publish-manage/revoked': Revoked
 };
 
-const getRoutes = permissionsTree => {
-  const fn = (permissionsTree, paths = [], routes = []) => permissionsTree.reduce((routes, node) => {
+const getRoutes = menusTree => {
+  const fn = (menusTree, paths = [], routes = []) => menusTree.reduce((routes, node) => {
     const { children, key, id } = node;
     if (children) {
       return fn(children, paths.concat(key), routes);
@@ -54,18 +54,18 @@ const getRoutes = permissionsTree => {
     });
   }, routes);
 
-  return fn(permissionsTree);
+  return fn(menusTree);
 };
 
 function ContentBar() {
   const [routes, setRoutes] = useState([]);
-  const { userPermissions } = useSelector(state => state.main);
+  const { userMenus } = useSelector(state => state.main);
 
   useEffect(() => {
-    const userPermissionsTree = getAssembleTree(userPermissions);
-    const routes = getRoutes(userPermissionsTree);
+    const userMenusTree = getAssembleTree(userMenus);
+    const routes = getRoutes(userMenusTree);
     setRoutes(routes);
-  }, [userPermissions]);
+  }, [userMenus]);
 
   return (
     <Content className={style.contentBar}>

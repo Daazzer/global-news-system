@@ -41,12 +41,12 @@ function RoleList() {
     addForm.resetFields();
   };
 
-  const handleEditPermissions = row => {
+  const handleEditMenus = row => {
     setMenusModalData(row);
     setIsMenusModalOpen(true);
   };
 
-  const handleEditPermissionsOk = () => {
+  const handleEditMenusOk = () => {
     setIsMenusModalOpen(false);
     initDataSource();
   };
@@ -77,7 +77,7 @@ function RoleList() {
             shape="circle"
             disabled={row.id === Role.ADMIN}
             icon={<KeyOutlined />}
-            onClick={() => handleEditPermissions(row)}
+            onClick={() => handleEditMenus(row)}
           />
           <Popconfirm
             title={`你确定要删除“${row.name}”角色吗？`}
@@ -123,8 +123,8 @@ function RoleList() {
       <MenusModalTree
         data={menusModalData}
         open={isMenusModalOpen}
-        onCheck={checkedKeys => setMenusModalData({ ...menusModalData, permissions: checkedKeys })}
-        onOk={handleEditPermissionsOk}
+        onCheck={checkedKeys => setMenusModalData({ ...menusModalData, menus: checkedKeys })}
+        onOk={handleEditMenusOk}
         onCancel={() => setIsMenusModalOpen(false)}
       />
     </div>

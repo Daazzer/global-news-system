@@ -1,13 +1,25 @@
 /**
- * 默认账户
+ * 系统默认
  * @readonly
  * @enum {number}
  */
-export const DefaultUser = {
+export const SystemDefault = {
   /** 否 */
   NO: 0,
   /** 是 */
   YES: 1
+};
+
+/**
+ * 系统状态
+ * @readonly
+ * @enum {number}
+ */
+ export const SystemState = {
+  /** 停用 */
+  DISABLED: 0,
+  /** 启用 */
+  ENABLED: 1
 };
 
 /**
@@ -82,28 +94,4 @@ export const Region = {
       }
     ];
   }
-};
-
-/**
- * 用户状态
- * @readonly
- * @enum {number}
- */
-export const UserState = {
-  /** 停用 */
-  DISABLED: 0,
-  /** 启用 */
-  ENABLED: 1
-};
-
-/**
- * 权限状态
- * @readonly
- * @enum {number}
- */
-export const PermissionState = {
-  /** 停用 */
-  DISABLED: 0,
-  /** 启用 */
-  ENABLED: 1
 };

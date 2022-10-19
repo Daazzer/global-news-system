@@ -1,3 +1,3 @@
 import http from './http';
 
-export const getPermissions = () => http.get('/permissions');
+export const getMenus = () => http.get('/menus');

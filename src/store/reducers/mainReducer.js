@@ -1,27 +1,28 @@
-import { getPermissions } from '@/api/user';
-import { PermissionState } from '@/utils/enums';
+import { getMenus } from '@/api/user';
+import { SystemState } from '@/utils/enums';
 
 const initState = {
-  permissions: [],  // 所有权限
-  userPermissions: []  // 当前用户权限
+  menus: [],  // 所有菜单权限
+  userMenus: []  // 当前用户菜单权限
 };
 
-export const setAllPermissions = async (dispatch, getState) => {
-  const res = await getPermissions();
-  const permissions = res.data;
+export const setAllMenus = async (dispatch, getState) => {
+  const res = await getMenus();
+  const menus = res.data;
   const { user } = getState().login;
-  const rolePermissions = user?.role.permissions || [];
+  const roleMenus = user?.role.menus || [];
   // 判断当前用户的权限
-  const userPermissions = permissions.filter(permission => {
-    if (rolePermissions.includes('*')) return true;
+  const userMenus = menus.filter(menu => {
+    const { id, state } = menu;
+    if (roleMenus.includes('*')) return true;
     return (
-      rolePermissions.includes(permission.id) &&
-      permission.state === PermissionState.ENABLED
+      roleMenus.includes(id) &&
+      state === SystemState.ENABLED
     );
   });
 
-  dispatch({ type: 'main/SET_PERMISSIONS', payload: permissions });
-  dispatch({ type: 'main/SET_USER_PERMISSIONS', payload: userPermissions });
+  dispatch({ type: 'main/SET_MENUS', payload: menus });
+  dispatch({ type: 'main/SET_USER_MENUS', payload: userMenus });
 };
 
 /**
@@ -32,10 +33,10 @@ export const setAllPermissions = async (dispatch, getState) => {
  */
 const mainReducer = (state = initState, action) => {
   switch (action.type) {
-    case 'main/SET_PERMISSIONS':
-      return { ...state, permissions: action.payload };
-    case 'main/SET_USER_PERMISSIONS':
-      return { ...state, userPermissions: action.payload };
+    case 'main/SET_MENUS':
+      return { ...state, menus: action.payload };
+    case 'main/SET_USER_MENUS':
+      return { ...state, userMenus: action.payload };
     default:
       return state;
   }

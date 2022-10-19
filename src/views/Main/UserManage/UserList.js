@@ -4,7 +4,7 @@ import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { getUsers } from '@/api/login';
 import { delUser, setUser } from '@/api/userList';
 import { getOptionsLabel } from '@/utils';
-import { DefaultUser, Region, UserState } from '@/utils/enums';
+import { SystemDefault, Region, SystemState } from '@/utils/enums';
 import UserModalForm from '@/components/UserModalForm';
 import style from './UserList.module.scss';
 
@@ -54,7 +54,7 @@ function UserList() {
   const handleUserStateChange = async (value, row) => {
     await setUser({
       id: row.id,
-      state: value ? UserState.ENABLED : UserState.DISABLED
+      state: value ? SystemState.ENABLED : SystemState.DISABLED
     });
 
     initDataSource();
@@ -93,7 +93,7 @@ function UserList() {
       key: 'state',
       render: (value, row) => (
         <Switch
-          disabled={row.default === DefaultUser.YES}
+          disabled={row.default === SystemDefault.YES}
           checked={value}
           onChange={value => handleUserStateChange(value, row)}
         />
@@ -108,7 +108,7 @@ function UserList() {
             className="option__button"
             type="primary"
             shape="circle"
-            disabled={row.default === DefaultUser.YES}
+            disabled={row.default === SystemDefault.YES}
             icon={<EditOutlined />}
             onClick={() => handleModalOpen('edit', row)}
           />
@@ -117,14 +117,14 @@ function UserList() {
             onConfirm={() => handleDel(row)}
             okText="确定"
             cancelText="取消"
-            disabled={row.default === DefaultUser.YES}
+            disabled={row.default === SystemDefault.YES}
           >
             <Button
               danger
               className="option__button"
               type="primary"
               shape="circle"
-              disabled={row.default === DefaultUser.YES}
+              disabled={row.default === SystemDefault.YES}
               icon={<DeleteOutlined />}
             />
           </Popconfirm>

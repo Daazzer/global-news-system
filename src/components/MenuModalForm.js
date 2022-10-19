@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Modal, Form, Input, message } from 'antd';
-import { addPermission, setPermission } from '@/api/permissionList';
+import { addMenu, setMenu } from '@/api/menuList';
 
 /**
  * 菜单详情模态框
@@ -16,9 +16,9 @@ function MenuModalForm({ state, open, data, form, onOk, onCancel }) {
   const handleOk = async () => {
     const formData = await form.validateFields();
     if (state === 'edit') {
-      await setPermission(data.id, formData)
+      await setMenu(data.id, formData)
     } else {
-      await addPermission({
+      await addMenu({
         ...formData,
         parentId: data?.id || 0
       });

@@ -24,20 +24,20 @@ const getTreeData = tree => {
  */
 function MenusModalTree({ open, data, onOk, onCancel, onCheck }) {
   const [treeData, setTreeData] = useState([]);
-  const { permissions } = useSelector(state => state.main);
+  const { menus } = useSelector(state => state.main);
 
   const handleOk = async () => {
-    const { id, permissions } = data;
-    await setRole(id, { permissions });
+    const { id, menus } = data;
+    await setRole(id, { menus });
     message.success('菜单分配成功');
     onOk();
   };
 
   useEffect(() => {
-    const permissionsTree = getAssembleTree(permissions);
-    const treeData = getTreeData(permissionsTree);
+    const menusTree = getAssembleTree(menus);
+    const treeData = getTreeData(menusTree);
     setTreeData(treeData);
-  }, [permissions]);
+  }, [menus]);
 
   return (
     <Modal
@@ -50,7 +50,7 @@ function MenusModalTree({ open, data, onOk, onCancel, onCheck }) {
     >
       <Tree
         checkable
-        checkedKeys={data.permissions}
+        checkedKeys={data.menus}
         onCheck={onCheck}
         treeData={treeData}
       />

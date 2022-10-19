@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Popconfirm, Table, Switch, Form, message } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { setAllPermissions } from '@/store/reducers/mainReducer';
-import { delPermission, setPermission } from '@/api/permissionList';
+import { setAllMenus } from '@/store/reducers/mainReducer';
+import { delMenu, setMenu } from '@/api/menuList';
 import MenuModalForm from '@/components/MenuModalForm';
 import { getAssembleTree } from '@/utils';
-import { PermissionState } from '@/utils/enums';
+import { SystemState } from '@/utils/enums';
 import style from './MenuList.module.scss';
 
 /**
@@ -16,17 +16,17 @@ import style from './MenuList.module.scss';
 function MenuList() {
   const dispatch = useDispatch();
   const [permissionModalForm] = Form.useForm();
-  const { permissions } = useSelector(state => state.main);
+  const { menus } = useSelector(state => state.main);
   const [dataSource, setDataSource] = useState([]);
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
   const [menuModalFormData, setMenuModalFormData] = useState({});
   const [permissionModalFormState, setMenuModalFormState] = useState('add');
 
   const handleStateChange = async (value, row) => {
-    await setPermission(row.id, {
-      state: value ? PermissionState.ENABLED : PermissionState.DISABLED
+    await setMenu(row.id, {
+      state: value ? SystemState.ENABLED : SystemState.DISABLED
     });
-    dispatch(setAllPermissions);
+    dispatch(setAllMenus);
   };
 
   const handleMenuModalFormOpen = (state, data) => {
@@ -46,7 +46,7 @@ function MenuList() {
   };
 
   const handleMenuModalFormOk = () => {
-    dispatch(setAllPermissions);
+    dispatch(setAllMenus);
     handleMenuModalFormCancel();
   };
 
@@ -61,15 +61,15 @@ function MenuList() {
       message.error('当前权限存在子权限，请先把对应的子权限删除');
       return;
     }
-    await delPermission(row.id);
+    await delMenu(row.id);
     message.success('删除权限成功');
-    dispatch(setAllPermissions);
+    dispatch(setAllMenus);
   };
 
   useEffect(() => {
-    const dataSource = getAssembleTree(permissions);
+    const dataSource = getAssembleTree(menus);
     setDataSource(dataSource);
-  }, [permissions]);
+  }, [menus]);
 
   const columns = [
     {
