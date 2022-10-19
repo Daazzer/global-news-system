@@ -130,7 +130,7 @@ function UserModalForm({
             {regions.map(region =>
               <Option
                 key={region.id}
-                value={region.value}
+                value={region.id}
               >{region.label}</Option>
             )}
           </Select>

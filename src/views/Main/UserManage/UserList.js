@@ -3,8 +3,7 @@ import { Table, Switch, Button, Form, message, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { getUsers } from '@/api/login';
 import { delUser, setUser } from '@/api/userList';
-import { getOptionsLabel } from '@/utils';
-import { SystemDefault, Region, SystemState } from '@/utils/enums';
+import { SystemDefault, SystemState } from '@/utils/enums';
 import UserModalForm from '@/components/UserModalForm';
 import style from './UserList.module.scss';
 
@@ -46,7 +45,7 @@ function UserList() {
 
   /** 初始化列表数据 */
   const initDataSource = async () => {
-    const res = await getUsers();
+    const res = await getUsers({ _expand: ['role', 'region'] });
     const dataSource = res.data;
     setDataSource(dataSource);
   };
@@ -80,7 +79,7 @@ function UserList() {
       title: '区域',
       dataIndex: 'region',
       key: 'region',
-      render: value => getOptionsLabel(value, Region.options)
+      render: value => value?.label
     },
     {
       title: '角色',

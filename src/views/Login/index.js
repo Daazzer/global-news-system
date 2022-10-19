@@ -16,7 +16,10 @@ function Login() {
   const { loading } = useSelector(state => state.style);
 
   const handleLogin = async formData => {
-    const res = await getUsers(formData);
+    const res = await getUsers({
+      ...formData,
+      _expand: 'role'
+    });
     const { data } = res;
     const [user] = data;
 
