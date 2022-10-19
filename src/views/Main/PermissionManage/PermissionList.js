@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Popconfirm, Table, Switch, Form } from 'antd';
+import { Button, Popconfirm, Table, Switch, Form, message } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import style from './PermissionList.module.scss';
-import { getAssembleTree } from '@/utils';
-import { setPermission } from '@/api/permissionList';
 import { setAllPermissions } from '@/store/reducers/mainReducer';
-import { PermissionState } from '@/utils/enums';
+import { delPermission, setPermission } from '@/api/permissionList';
 import PermissionModalForm from '@/components/PermissionModalForm';
+import { getAssembleTree } from '@/utils';
+import { PermissionState } from '@/utils/enums';
+import style from './PermissionList.module.scss';
 
 /**
  * 权限列表
@@ -45,14 +45,25 @@ function PermissionList() {
     setIsPermissionModalOpen(true);
   };
 
+  const handlePermissionModalFormOk = () => {
+    dispatch(setAllPermissions);
+    handlePermissionModalFormCancel();
+  };
+
   const handlePermissionModalFormCancel = () => {
     permissionModalForm.resetFields();
     setPermissionModalFormData({});
     setIsPermissionModalOpen(false);
   };
 
-  const handleDel = row => {
-
+  const handleDel = async row => {
+    if (row.children) {
+      message.error('当前权限存在子权限，请先把对应的子权限删除');
+      return;
+    }
+    await delPermission(row.id);
+    message.success('删除权限成功');
+    dispatch(setAllPermissions);
   };
 
   useEffect(() => {
@@ -106,7 +117,7 @@ function PermissionList() {
             onClick={() => handlePermissionModalFormOpen('edit', row)}
           />
           <Popconfirm
-            title={`你确定要删除“${row.name}”角色吗？`}
+            title={`你确定要删除“${row.name}”权限吗？`}
             onConfirm={() => handleDel(row)}
             okText="确定"
             cancelText="取消"
@@ -144,6 +155,7 @@ function PermissionList() {
         data={permissionModalFormData}
         form={permissionModalForm}
         state={permissionModalFormState}
+        onOk={handlePermissionModalFormOk}
         onCancel={handlePermissionModalFormCancel}
       />
     </div>

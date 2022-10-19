@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Modal, Form, Input, message } from 'antd';
-import { addRole } from '@/api/roleList';
+import { addPermission } from '@/api/permissionList';
 
 /**
  * 权限信息模态框表单
@@ -14,11 +14,13 @@ function PermissionModalForm({ state, open, data, form, onOk, onCancel }) {
   }[state]), [state]);
 
   const handleOk = async () => {
-    const addFormData = await form.validateFields();
-    await addRole(addFormData);
-    message.success('添加角色成功');
+    const formData = await form.validateFields();
+    await addPermission({
+      ...formData,
+      parentId: data?.id || 0
+    });
+    message.success(`${state === 'add' ? '添加' : '修改'}权限成功`);
     onOk();
-    onCancel();
   };
 
   return (
