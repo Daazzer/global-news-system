@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { message, Modal, Tree } from 'antd';
-import { getPermissions } from '@/api/user';
 import { getAssembleTree } from '@/utils';
 import { setRole } from '@/api/roleList';
 
@@ -24,14 +24,7 @@ const getTreeData = tree => {
  */
 function PermissionsModalTree({ open, data, onOk, onCancel, onCheck }) {
   const [treeData, setTreeData] = useState([]);
-
-  const initTreeData = async () => {
-    const res = await getPermissions();
-    const allPermissions = res.data;
-    const allPermissionsTree = getAssembleTree(allPermissions);
-    const treeData = getTreeData(allPermissionsTree);
-    setTreeData(treeData);
-  };
+  const { allPermissions } = useSelector(state => state.main);
 
   const handleOk = async () => {
     const { id, permissions } = data;
@@ -41,8 +34,10 @@ function PermissionsModalTree({ open, data, onOk, onCancel, onCheck }) {
   };
 
   useEffect(() => {
-    initTreeData();
-  }, []);
+    const allPermissionsTree = getAssembleTree(allPermissions);
+    const treeData = getTreeData(allPermissionsTree);
+    setTreeData(treeData);
+  }, [allPermissions]);
 
   return (
     <Modal
