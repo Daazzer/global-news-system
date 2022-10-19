@@ -4,23 +4,23 @@ import { Button, Popconfirm, Table, Switch, Form, message } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { setAllPermissions } from '@/store/reducers/mainReducer';
 import { delPermission, setPermission } from '@/api/permissionList';
-import PermissionModalForm from '@/components/PermissionModalForm';
+import MenuModalForm from '@/components/MenuModalForm';
 import { getAssembleTree } from '@/utils';
 import { PermissionState } from '@/utils/enums';
-import style from './PermissionList.module.scss';
+import style from './MenuList.module.scss';
 
 /**
- * 权限列表
+ * 菜单列表
  * @returns {React.ReactNode}
  */
-function PermissionList() {
+function MenuList() {
   const dispatch = useDispatch();
   const [permissionModalForm] = Form.useForm();
   const { permissions } = useSelector(state => state.main);
   const [dataSource, setDataSource] = useState([]);
-  const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
-  const [permissionModalFormData, setPermissionModalFormData] = useState({});
-  const [permissionModalFormState, setPermissionModalFormState] = useState('add');
+  const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
+  const [menuModalFormData, setMenuModalFormData] = useState({});
+  const [permissionModalFormState, setMenuModalFormState] = useState('add');
 
   const handleStateChange = async (value, row) => {
     await setPermission(row.id, {
@@ -29,7 +29,7 @@ function PermissionList() {
     dispatch(setAllPermissions);
   };
 
-  const handlePermissionModalFormOpen = (state, data) => {
+  const handleMenuModalFormOpen = (state, data) => {
     if (state === 'edit') {
       permissionModalForm.setFieldsValue({
         name: data.name,
@@ -38,22 +38,22 @@ function PermissionList() {
     }
 
     if (data) {
-      setPermissionModalFormData(data);
+      setMenuModalFormData(data);
     }
 
-    setPermissionModalFormState(state);
-    setIsPermissionModalOpen(true);
+    setMenuModalFormState(state);
+    setIsMenuModalOpen(true);
   };
 
-  const handlePermissionModalFormOk = () => {
+  const handleMenuModalFormOk = () => {
     dispatch(setAllPermissions);
-    handlePermissionModalFormCancel();
+    handleMenuModalFormCancel();
   };
 
-  const handlePermissionModalFormCancel = () => {
+  const handleMenuModalFormCancel = () => {
     permissionModalForm.resetFields();
-    setPermissionModalFormData({});
-    setIsPermissionModalOpen(false);
+    setMenuModalFormData({});
+    setIsMenuModalOpen(false);
   };
 
   const handleDel = async row => {
@@ -107,14 +107,14 @@ function PermissionList() {
             type="primary"
             shape="circle"
             icon={<PlusOutlined />}
-            onClick={() => handlePermissionModalFormOpen('addSub', row)}
+            onClick={() => handleMenuModalFormOpen('addSub', row)}
           />
           <Button
             className="option__button"
             type="primary"
             shape="circle"
             icon={<EditOutlined />}
-            onClick={() => handlePermissionModalFormOpen('edit', row)}
+            onClick={() => handleMenuModalFormOpen('edit', row)}
           />
           <Popconfirm
             title={`你确定要删除“${row.name}”权限吗？`}
@@ -136,12 +136,12 @@ function PermissionList() {
   ];
 
   return (
-    <div className={style.permissionList}>
+    <div className={style.menuList}>
       <Button
-        className="permission-list__button"
+        className="menu-list__button"
         type="primary"
         icon={<PlusOutlined />}
-        onClick={() => handlePermissionModalFormOpen('add')}
+        onClick={() => handleMenuModalFormOpen('add')}
       >添加权限</Button>
       <Table
         pagination={false}
@@ -150,16 +150,16 @@ function PermissionList() {
         columns={columns}
         rowKey={row => row.id}
       />
-      <PermissionModalForm
-        open={isPermissionModalOpen}
-        data={permissionModalFormData}
+      <MenuModalForm
+        open={isMenuModalOpen}
+        data={menuModalFormData}
         form={permissionModalForm}
         state={permissionModalFormState}
-        onOk={handlePermissionModalFormOk}
-        onCancel={handlePermissionModalFormCancel}
+        onOk={handleMenuModalFormOk}
+        onCancel={handleMenuModalFormCancel}
       />
     </div>
   );
 }
 
-export default PermissionList;
+export default MenuList;

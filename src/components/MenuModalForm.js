@@ -1,24 +1,28 @@
 import React, { useMemo } from 'react';
 import { Modal, Form, Input, message } from 'antd';
-import { addPermission } from '@/api/permissionList';
+import { addPermission, setPermission } from '@/api/permissionList';
 
 /**
  * 权限信息模态框表单
  * @returns {React.ReactNode}
  */
-function PermissionModalForm({ state, open, data, form, onOk, onCancel }) {
+function MenuModalForm({ state, open, data, form, onOk, onCancel }) {
   const title = useMemo(() => ({
-    add: '添加权限',
-    addSub: `添加“${data.name}”子权限`,
-    edit: `修改“${data.name}”权限`
+    add: '添加菜单',
+    addSub: `添加“${data.name}”子菜单`,
+    edit: `修改“${data.name}”菜单`
   }[state]), [state, data]);
 
   const handleOk = async () => {
     const formData = await form.validateFields();
-    await addPermission({
-      ...formData,
-      parentId: data?.id || 0
-    });
+    if (state === 'edit') {
+      await setPermission(data.id, formData)
+    } else {
+      await addPermission({
+        ...formData,
+        parentId: data?.id || 0
+      });
+    }
     message.success(`${state === 'add' ? '添加' : '修改'}权限成功`);
     onOk();
   };
@@ -67,4 +71,4 @@ function PermissionModalForm({ state, open, data, form, onOk, onCancel }) {
   );
 }
 
-export default PermissionModalForm;
+export default MenuModalForm;

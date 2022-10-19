@@ -10,7 +10,7 @@ import { getAssembleTree } from '@/utils';
 import Home from '@/views/Main/Home';
 import UserList from '@/views/Main/UserManage/UserList';
 import RoleList from '@/views/Main/PermissionManage/RoleList';
-import PermissionList from '@/views/Main/PermissionManage/PermissionList';
+import MenuList from '@/views/Main/PermissionManage/MenuList';
 import NewsAdd from '@/views/Main/NewsManage/NewsAdd';
 import Draft from '@/views/Main/NewsManage/Draft';
 import NewsCategory from '@/views/Main/NewsManage/NewsCategory';
@@ -28,7 +28,7 @@ const viewsMap = {
   '/home': Home,
   '/user-manage/user-list': UserList,
   '/permission-manage/role-list': RoleList,
-  '/permission-manage/permission-list': PermissionList,
+  '/permission-manage/menu-list': MenuList,
   '/news-manage/news-add': NewsAdd,
   '/news-manage/draft': Draft,
   '/news-manage/news-category': NewsCategory,
