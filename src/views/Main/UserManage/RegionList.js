@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Table, Button, Form, message, Popconfirm } from 'antd';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { getUsers } from '@/api/login';
-import { delUser } from '@/api/userList';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Table, Button, Form, message, Popconfirm, Input } from 'antd';
+import { DeleteOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { setRegions } from '@/store/reducers/mainReducer';
+import RegionModalForm from '@/components/RegionModalForm';
 import { SystemDefault } from '@/utils/enums';
-import UserModalForm from '@/components/UserModalForm';
+import { delRegion, setRegion } from '@/api/regionList';
 import style from './RegionList.module.scss';
 
 /**
@@ -13,78 +13,82 @@ import style from './RegionList.module.scss';
  * @returns {React.ReactNode}
  */
 function RegionList() {
-  const [form] = Form.useForm();
-  const [dataSource, setDataSource] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState('添加用户');
-  const [userModalformData, setUserModalformData] = useState(null);
-  const { user } = useSelector(state => state.login);
-
-  /** 初始化列表数据 */
-  const initDataSource = useCallback(async () => {
-    const res = await getUsers({ _expand: ['role', 'region'] });
-    const { regionId, role: { menus } } = user;
-    const dataSource = res.data.filter(item => {
-      if (menus.includes('*')) {
-        return true;
-      }
-      return item.regionId === regionId;
-    });
-    setDataSource(dataSource);
-  }, [user]);
-
-  const handleUserModalFormOpen = (type, data) => {
-    const { roleId, regionId, username, password } = data || {};
-    const formData = type === 'add' ? null : {
-      username,
-      password,
-      regionId,
-      roleId
-    };
-    setModalTitle(`${type === 'add' ? '添加' : '编辑'}用户`);
-    setIsModalOpen(true);
-    if (type === 'add') {
-      form.resetFields();
-      setUserModalformData(null);
-    } else {
-      form.setFieldsValue(formData);
-      setUserModalformData(data);
-    }
-  };
+  const dispatch = useDispatch();
+  const [editRowId, setEditRowId] = useState(null);
+  const [regionModalForm] = Form.useForm();
+  const [regionForm] = Form.useForm();
+  const [isRegionModalFormOpen, setIsRegionModalFormOpen] = useState(false);
+  const { regions: dataSource } = useSelector(state => state.main);
 
   const handleUserModalFormOk = () => {
-    message.success(`${userModalformData ? '修改' : '添加'}用户成功`);
-    setIsModalOpen(false);
-    setTimeout(initDataSource);
+    setIsRegionModalFormOpen(false);
+    dispatch(setRegions);
+  };
+
+  const handleEdit = row => {
+    regionForm.setFieldsValue({ name: row.name });
+    setEditRowId(row.id);
+  };
+
+  const handleSave = async row => {
+    const { name } = await regionForm.validateFields();
+    await setRegion(row.id, { name });
+    message.success('设置区域名成功');
+    setEditRowId(null);
+    dispatch(setRegions);
   };
 
   const handleDel = async row => {
-    await delUser(row.id);
-    initDataSource();
-    message.success('删除用户成功');
+    await delRegion(row.id);
+    message.success('删除区域成功');
+    dispatch(setRegions);
   };
-
-  useEffect(() => {
-    initDataSource();
-  }, [initDataSource]);
 
   const columns = [
     {
       title: 'ID',
       dataIndex: 'id',
-      key: 'id',
+      key: 'id'
     },
     {
       title: '区域名',
       dataIndex: 'name',
       key: 'name',
-      render: value => value?.label
+      render: (value, row) => (
+        editRowId === row.id
+          ? <Form.Item
+            name="name"
+            style={{ margin: 0 }}
+            rules={[
+              {
+                required: true,
+                message: '区域名不能为空'
+              }
+            ]}
+          >
+            <Input maxLength={30} />
+          </Form.Item>
+          : <div className="editable-cell" onClick={() => handleEdit(row)}>{value}</div>
+      )
     },
     {
       title: '操作',
       key: 'option',
       render: row => (
         <div className={style.option}>
+          {editRowId === row.id && <Button
+            className="option__button"
+            type="primary"
+            shape="circle"
+            icon={<CheckOutlined />}
+            onClick={() => handleSave(row)}
+          />}
+          {editRowId === row.id && <Button
+            className="option__button"
+            shape="circle"
+            icon={<CloseOutlined />}
+            onClick={() => setEditRowId(null)}
+          />}
           <Popconfirm
             title={`你确定要删除“${row.name}”区域吗？`}
             onConfirm={() => handleDel(row)}
@@ -112,21 +116,22 @@ function RegionList() {
         className="region-list__button"
         type="primary"
         icon={<PlusOutlined />}
-        onClick={() => handleUserModalFormOpen('add')}
-      >添加用户</Button>
-      <Table
-        pagination={{ pageSize: 5 }}
-        dataSource={dataSource}
-        columns={columns}
-        rowKey={row => row.id}
-      />
-      <UserModalForm
-        title={modalTitle}
-        open={isModalOpen}
-        data={userModalformData}
-        form={form}
+        onClick={() => setIsRegionModalFormOpen(true)}
+      >添加区域</Button>
+      <Form form={regionForm}>
+        <Table
+          rowClassName={() => 'editable-row'}
+          pagination={{ pageSize: 5 }}
+          rowKey={row => row.id}
+          dataSource={dataSource}
+          columns={columns}
+        />
+      </Form>
+      <RegionModalForm
+        open={isRegionModalFormOpen}
+        form={regionModalForm}
         onOk={handleUserModalFormOk}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => setIsRegionModalFormOpen(false)}
       />
     </div>
   );
