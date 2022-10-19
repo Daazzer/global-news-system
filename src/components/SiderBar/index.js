@@ -83,6 +83,7 @@ function SiderBar() {
     const menus = getMenus(menusTree);
 
     dispatch({ type: 'main/SET_PERMISSIONS', payload: permissions });
+    dispatch({ type: 'main/SET_ALL_PERMISSIONS', payload: allPermissions });
     setMenus(menus);
   }, [user, dispatch]);
 
