@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Popconfirm, Table, Switch, Form, message } from 'antd';
+import { Button, Popconfirm, Table, Switch, Form, message, Tag } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { setAllMenus } from '@/store/reducers/mainReducer';
 import { delMenu, setMenu } from '@/api/menuList';
@@ -85,7 +85,8 @@ function MenuList() {
     {
       title: '权限标识',
       dataIndex: 'key',
-      key: 'key'
+      key: 'key',
+      render: value => <Tag color="#1890ff">{value}</Tag>
     },
     {
       title: '权限状态',
