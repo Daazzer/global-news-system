@@ -145,7 +145,7 @@ function MenuList() {
         type="primary"
         icon={<PlusOutlined />}
         onClick={() => handleMenuModalFormOpen('add')}
-      >添加权限</Button>
+      >添加菜单</Button>
       <Table
         pagination={false}
         scroll={{ y: 480 }}
