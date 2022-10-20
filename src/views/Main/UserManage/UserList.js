@@ -13,11 +13,11 @@ import style from './UserList.module.scss';
  * @returns {React.ReactNode}
  */
 function UserList() {
-  const [form] = Form.useForm();
+  const [userModalForm] = Form.useForm();
   const [dataSource, setDataSource] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState('添加用户');
-  const [userModalformData, setUserModalformData] = useState(null);
+  const [isUserModalFormOpen, setIsModalOpen] = useState(false);
+  const [userModalFormState, setUserModalFormState] = useState('');
+  const [userModalformData, setUserModalformData] = useState({});
   const { user } = useSelector(state => state.login);
 
   /** 初始化列表数据 */
@@ -42,27 +42,21 @@ function UserList() {
     initDataSource();
   };
 
-  const handleUserModalFormOpen = (type, data) => {
-    const { roleId, regionId, username, password } = data || {};
-    const formData = type === 'add' ? null : {
+  const handleUserModalFormOpen = (state, data = {}) => {
+    const { roleId, regionId, username, password } = data;
+    const formData = {
       username,
       password,
       regionId,
       roleId
     };
-    setModalTitle(`${type === 'add' ? '添加' : '编辑'}用户`);
+    userModalForm.setFieldsValue(formData);
+    setUserModalFormState(state);
+    setUserModalformData(data);
     setIsModalOpen(true);
-    if (type === 'add') {
-      form.resetFields();
-      setUserModalformData(null);
-    } else {
-      form.setFieldsValue(formData);
-      setUserModalformData(data);
-    }
   };
 
   const handleUserModalFormOk = () => {
-    message.success(`${userModalformData ? '修改' : '添加'}用户成功`);
     setIsModalOpen(false);
     setTimeout(initDataSource);
   };
@@ -115,7 +109,6 @@ function UserList() {
             className="option__button"
             type="primary"
             shape="circle"
-            disabled={row.default === SystemDefault.YES}
             icon={<EditOutlined />}
             onClick={() => handleUserModalFormOpen('edit', row)}
           />
@@ -155,10 +148,10 @@ function UserList() {
         rowKey={row => row.id}
       />
       <UserModalForm
-        title={modalTitle}
-        open={isModalOpen}
+        state={userModalFormState}
+        open={isUserModalFormOpen}
         data={userModalformData}
-        form={form}
+        form={userModalForm}
         onOk={handleUserModalFormOk}
         onCancel={() => setIsModalOpen(false)}
       />

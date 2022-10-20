@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Modal, Form, Input, Select } from 'antd';
+import { Modal, Form, Input, Select, message } from 'antd';
 import PropTypes from 'prop-types';
 import { addUser, getRoles, setUser } from '@/api/userList';
-import { Region, Role } from '@/utils/enums';
+import { Region, Role, SystemDefault } from '@/utils/enums';
 import { useSelector } from 'react-redux';
 
 const { Option } = Select;
@@ -13,21 +13,25 @@ const { Option } = Select;
  * @returns {import("react").ReactNode}
  */
 function UserModalForm({
+  state,
   data,
   form,
-  title,
   open,
   onCancel,
   onOk
 }) {
   const [roles, setRoles] = useState([]);
-  const { regions: allRegions } = useSelector(state => state.main);
   const [roleId, setRoleId] = useState(form.getFieldValue('roleId'));
+  const { regions } = useSelector(state => state.main);
   const disabledRegion = useMemo(() => roleId === Role.ADMIN, [roleId]);
-  const regions = useMemo(() => allRegions.filter(region => roleId === Role.ADMIN
+  const stateText = useMemo(() => ({
+    add: '添加',
+    edit: '修改'
+  })[state], [state]);
+  const currentRegions = useMemo(() => regions.filter(region => roleId === Role.ADMIN
     ? region.id === Region.GLOBAL
     : region.id !== Region.GLOBAL
-  ), [allRegions, roleId]);
+  ), [regions, roleId]);
 
   /** 初始化角色数据 */
   const initRoles = async () => {
@@ -49,14 +53,15 @@ function UserModalForm({
 
   const handleModalOk = async () => {
     const formData = await form.validateFields();
-    if (data) {
+    if (state === 'add') {
+      await addUser(formData);
+    } else {
       await setUser({
         id: data.id,
         ...formData
       });
-    } else {
-      await addUser(formData);
     }
+    message.success(stateText + '用户成功');
     onOk();
   };
 
@@ -65,17 +70,14 @@ function UserModalForm({
   }, []);
 
   useEffect(() => {
-    if (open) {
-      const roleId = form.getFieldValue('roleId');
-      setRoleId(roleId);
-    }
-  }, [open, form]);
+    setRoleId(data.roleId);
+  }, [data]);
 
   return (
     <Modal
       forceRender
       getContainer={false}
-      title={title}
+      title={stateText + '用户'}
       open={open}
       onOk={handleModalOk}
       onCancel={onCancel}
@@ -122,7 +124,7 @@ function UserModalForm({
           ]}
         >
           <Select disabled={disabledRegion}>
-            {regions.map(region =>
+            {currentRegions.map(region =>
               <Option
                 key={region.id}
                 value={region.id}
@@ -140,7 +142,11 @@ function UserModalForm({
             }
           ]}
         >
-          <Select value={roleId} onChange={handleRoleIdChange}>
+          <Select
+            disabled={data?.default === SystemDefault.YES}
+            value={roleId}
+            onChange={handleRoleIdChange}
+          >
             {roles.map(role =>
               <Option
                 key={role.id}
@@ -155,8 +161,9 @@ function UserModalForm({
 }
 
 UserModalForm.propTypes = {
+  data: PropTypes.object,
+  state: PropTypes.string,
   form: PropTypes.object,
-  title: PropTypes.string,
   open: PropTypes.bool,
   onCancel: PropTypes.func,
   onOk: PropTypes.func
