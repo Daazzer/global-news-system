@@ -15,8 +15,8 @@ import style from './MenuList.module.scss';
  */
 function MenuList() {
   const dispatch = useDispatch();
-  const [permissionModalForm] = Form.useForm();
   const { menus } = useSelector(state => state.main);
+  const [permissionModalForm] = Form.useForm();
   const [dataSource, setDataSource] = useState([]);
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
   const [menuModalFormData, setMenuModalFormData] = useState({});
