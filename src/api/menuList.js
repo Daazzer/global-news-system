@@ -1,7 +1,9 @@
+import { SystemDefault, SystemState } from '@/utils/enums';
 import http from './http';
 
 export const addMenu = data => http.post('/menus', {
-  state: 1,
+  state: SystemState.ENABLED,
+  default: SystemDefault.NO,
   ...data
 });
 

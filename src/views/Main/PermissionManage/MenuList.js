@@ -6,7 +6,7 @@ import { setAllMenus } from '@/store/reducers/mainReducer';
 import { delMenu, setMenu } from '@/api/menuList';
 import MenuModalForm from '@/components/MenuModalForm';
 import { getAssembleTree } from '@/utils';
-import { SystemState } from '@/utils/enums';
+import { SystemDefault, SystemState } from '@/utils/enums';
 import style from './MenuList.module.scss';
 
 /**
@@ -117,16 +117,18 @@ function MenuList() {
             onClick={() => handleMenuModalFormOpen('edit', row)}
           />
           <Popconfirm
-            title={`你确定要删除“${row.name}”权限吗？`}
-            onConfirm={() => handleDel(row)}
             okText="确定"
             cancelText="取消"
+            title={`你确定要删除“${row.name}”权限吗？`}
+            onConfirm={() => handleDel(row)}
+            disabled={row.default === SystemDefault.YES}
           >
             <Button
               danger
               className="option__button"
               type="primary"
               shape="circle"
+              disabled={row.default === SystemDefault.YES}
               icon={<DeleteOutlined />}
             />
           </Popconfirm>
