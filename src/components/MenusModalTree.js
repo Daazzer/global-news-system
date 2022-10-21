@@ -35,7 +35,7 @@ const getCheckedKeys = (tree, menuIds = []) => {
     const { children, key } = node;
     let result = menuIds.includes(key);
     const fn = tree => tree.every(node => {
-      if (node?.children) {
+      if (node?.children?.length) {
         return fn(node.children);
       } else {
         return menuIds.includes(node.key);
@@ -53,12 +53,12 @@ const getCheckedKeys = (tree, menuIds = []) => {
   const fn = tree => {
     tree.forEach(node => {
       const { children, key } = node;
-      
+
       if (isSave(node)) {
         checkedKeys.push(key);
       }
 
-      if (children && children.length) {
+      if (node?.children?.length) {
         fn(children);
       }
     });
