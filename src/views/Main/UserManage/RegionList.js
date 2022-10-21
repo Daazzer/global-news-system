@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, Button, Form, message, Popconfirm, Input } from 'antd';
 import { DeleteOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
@@ -14,11 +14,12 @@ import style from './RegionList.module.scss';
  */
 function RegionList() {
   const dispatch = useDispatch();
-  const [editRowId, setEditRowId] = useState(null);
+  const nameInputRef = useRef(null);
+  const { regions: dataSource } = useSelector(state => state.main);
   const [regionModalForm] = Form.useForm();
   const [regionForm] = Form.useForm();
+  const [editRowId, setEditRowId] = useState(null);
   const [isRegionModalFormOpen, setIsRegionModalFormOpen] = useState(false);
-  const { regions: dataSource } = useSelector(state => state.main);
 
   const handleUserModalFormOk = () => {
     setIsRegionModalFormOpen(false);
@@ -28,6 +29,7 @@ function RegionList() {
   const handleEdit = row => {
     regionForm.setFieldsValue({ name: row.name });
     setEditRowId(row.id);
+    setTimeout(() => nameInputRef.current.focus());
   };
 
   const handleSave = async row => {
@@ -51,7 +53,7 @@ function RegionList() {
       key: 'id'
     },
     {
-      title: '区域名',
+      title: '区域名 (点击单元格编辑)',
       dataIndex: 'name',
       key: 'name',
       render: (value, row) => (
@@ -66,7 +68,7 @@ function RegionList() {
               }
             ]}
           >
-            <Input maxLength={30} />
+            <Input ref={nameInputRef} maxLength={30} />
           </Form.Item>
           : <div className="editable-cell" onClick={() => handleEdit(row)}>{value}</div>
       )
