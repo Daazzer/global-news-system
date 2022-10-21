@@ -14,7 +14,7 @@ import style from './RoleList.module.scss';
  */
 function RoleList() {
   const [addForm] = Form.useForm();
-  const [menusModalData, setMenusModalData] = useState({});
+  const [menusModalTreeData, setMenusModalTreeData] = useState({});
   const [dataSource, setDataSource] = useState([]);
   const [isAddModalFormOpen, setIsAddModalFormOpen] = useState(false);
   const [isMenusModalOpen, setIsMenusModalOpen] = useState(false);
@@ -41,8 +41,8 @@ function RoleList() {
     addForm.resetFields();
   };
 
-  const handleEditMenus = row => {
-    setMenusModalData(row);
+  const handleMenusModalTreeOpen = row => {
+    setMenusModalTreeData(row);
     setIsMenusModalOpen(true);
   };
 
@@ -77,7 +77,7 @@ function RoleList() {
             shape="circle"
             disabled={row.default === SystemDefault.YES}
             icon={<KeyOutlined />}
-            onClick={() => handleEditMenus(row)}
+            onClick={() => handleMenusModalTreeOpen(row)}
           />
           <Popconfirm
             title={`你确定要删除“${row.name}”角色吗？`}
@@ -121,9 +121,12 @@ function RoleList() {
         onCancel={handleAddCancel}
       />
       <MenusModalTree
-        data={menusModalData}
+        data={menusModalTreeData}
         open={isMenusModalOpen}
-        onCheck={checkedKeys => setMenusModalData({ ...menusModalData, menus: checkedKeys })}
+        onCheck={(checkedKeys, { halfCheckedKeys }) => setMenusModalTreeData({
+          ...menusModalTreeData,
+          menus: checkedKeys.concat(halfCheckedKeys)
+        })}
         onOk={handleEditMenusOk}
         onCancel={() => setIsMenusModalOpen(false)}
       />

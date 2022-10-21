@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { message, Modal, Tree } from 'antd';
 import { getAssembleTree } from '@/utils';
@@ -19,12 +19,63 @@ const getTreeData = tree => {
 };
 
 /**
+ * 获取选中的 keys
+ * @param {object[]} tree 
+ * @param {number[]} menuIds 
+ * @returns {numebr[]}
+ */
+const getCheckedKeys = (tree, menuIds = []) => {
+  const checkedKeys = [];
+  /**
+   * 判断当前节点下所有后代节点是否全选，如果不是，则返回 false
+   * @param {object} node 
+   * @returns {boolean}
+   */
+  const isSave = node => {
+    const { children, key } = node;
+    let result = menuIds.includes(key);
+    const fn = tree => tree.every(node => {
+      if (node?.children) {
+        return fn(node.children);
+      } else {
+        return menuIds.includes(node.key);
+      }
+    });
+    if (children && children.length) {
+      result = fn(children);
+    }
+    return result;
+  };
+  /**
+   * 递归函数
+   * @param {object[]} tree 
+   */
+  const fn = tree => {
+    tree.forEach(node => {
+      const { children, key } = node;
+      
+      if (isSave(node)) {
+        checkedKeys.push(key);
+      }
+
+      if (children && children.length) {
+        fn(children);
+      }
+    });
+  };
+
+  fn(tree);
+  return checkedKeys;
+};
+
+/**
  * 菜单树模态框
  * @returns {React.ReactNode}
  */
 function MenusModalTree({ open, data, onOk, onCancel, onCheck }) {
   const [treeData, setTreeData] = useState([]);
   const { menus } = useSelector(state => state.main);
+  const checkedKeys = useMemo(() => getCheckedKeys(treeData, data.menus), [treeData, data]);
 
   const handleOk = async () => {
     const { id, menus } = data;
@@ -37,7 +88,7 @@ function MenusModalTree({ open, data, onOk, onCancel, onCheck }) {
     const menusTree = getAssembleTree(menus);
     const treeData = getTreeData(menusTree);
     setTreeData(treeData);
-  }, [menus]);
+  }, [menus, data]);
 
   return (
     <Modal
@@ -51,7 +102,7 @@ function MenusModalTree({ open, data, onOk, onCancel, onCheck }) {
     >
       <Tree
         checkable
-        checkedKeys={data.menus}
+        checkedKeys={checkedKeys}
         onCheck={onCheck}
         treeData={treeData}
       />
