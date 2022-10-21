@@ -50,11 +50,11 @@ function MenuList() {
 
   const handleDel = async row => {
     if (row.children) {
-      message.error('当前权限存在子权限，请先把对应的子权限删除');
+      message.error('当前菜单存在子菜单，请先把对应的子菜单删除');
       return;
     }
     await delMenu(row.id);
-    message.success('删除权限成功');
+    message.success('删除菜单成功');
     dispatch(setAllMenus);
   };
 
@@ -112,7 +112,7 @@ function MenuList() {
           <Popconfirm
             okText="确定"
             cancelText="取消"
-            title={`你确定要删除“${row.name}”权限吗？`}
+            title={`你确定要删除“${row.name}”菜单吗？`}
             onConfirm={() => handleDel(row)}
             disabled={row.default === SystemDefault.YES}
           >
