@@ -1,22 +1,26 @@
 import { useSelector } from 'react-redux';
-import { Form, Input, PageHeader, Select } from 'antd';
+import { Button, Form, Input, PageHeader, Select } from 'antd';
 import NewsEditor from '@/components/NewsEditor';
+import style from './NewsAdd.module.scss';
+import { useState } from 'react';
 
 function NewsAdd({ meta }) {
   const [form] = Form.useForm();
   const { categories } = useSelector(state => state.main);
+  const [title, setTitle] = useState('');
   const handleEditorStateChange = content => {
     form.setFieldValue('content', content)
     form.validateFields(['content']);
   };
 
   return (
-    <div className="news-add">
+    <div className={style.newsAdd}>
       <PageHeader
         title={meta.name}
-        subTitle="新增一条新闻"
+        subTitle={title}
       />
       <Form
+        className="news-form"
         labelWrap
         layout="vertical"
         colon={false}
@@ -24,7 +28,7 @@ function NewsAdd({ meta }) {
       >
         <Form.Item
           label="新闻标题"
-          name="name"
+          name="title"
           rules={[
             {
               required: true,
@@ -32,7 +36,10 @@ function NewsAdd({ meta }) {
             }
           ]}
         >
-          <Input maxLength={120} />
+          <Input
+            maxLength={120}
+            onChange={e => setTitle(e.target.value)}
+          />
         </Form.Item>
         <Form.Item
           label="新闻分类"
@@ -66,6 +73,16 @@ function NewsAdd({ meta }) {
           <NewsEditor onEditorStateChange={handleEditorStateChange} />
         </Form.Item>
       </Form>
+      <div className="button-bar">
+        <Button
+          className="button-bar__button"
+          type="primary"
+        >保存草稿</Button>
+        <Button
+          danger
+          className="button-bar__button"
+        >提交审核</Button>
+      </div>
     </div>
   );
 }
