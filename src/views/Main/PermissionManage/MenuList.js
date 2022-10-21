@@ -29,30 +29,22 @@ function MenuList() {
     dispatch(setAllMenus);
   };
 
-  const handleMenuModalFormOpen = (state, data) => {
-    if (state === 'edit') {
-      permissionModalForm.setFieldsValue({
-        name: data.name,
-        key: data.key
-      });
-    }
-
-    if (data) {
-      setMenuModalFormData(data);
-    }
-
+  const handleMenuModalFormOpen = (state, data = {}) => {
+    const formData = state === 'edit' ? {
+      name: data.name,
+      key: data.key
+    } : {
+      name: undefined,
+      key: undefined
+    };
+    permissionModalForm.setFieldsValue(formData);
+    setMenuModalFormData(data);
     setMenuModalFormState(state);
     setIsMenuModalOpen(true);
   };
 
   const handleMenuModalFormOk = () => {
     dispatch(setAllMenus);
-    handleMenuModalFormCancel();
-  };
-
-  const handleMenuModalFormCancel = () => {
-    permissionModalForm.resetFields();
-    setMenuModalFormData({});
     setIsMenuModalOpen(false);
   };
 
@@ -159,7 +151,7 @@ function MenuList() {
         form={permissionModalForm}
         state={permissionModalFormState}
         onOk={handleMenuModalFormOk}
-        onCancel={handleMenuModalFormCancel}
+        onCancel={() => setIsMenuModalOpen(false)}
       />
     </div>
   );
