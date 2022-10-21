@@ -7,7 +7,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { Layout } from 'antd';
 import { getAssembleTree } from '@/utils';
-import { setRegions } from '@/store/reducers/mainReducer';
+import { setCategories, setRegions } from '@/store/reducers/mainReducer';
 import Home from '@/views/Main/Home';
 import UserList from '@/views/Main/UserManage/UserList';
 import RegionList from '@/views/Main/UserManage/RegionList';
@@ -50,10 +50,11 @@ const getRoutes = menusTree => {
     }
 
     const path = '/' + paths.concat(key).join('/');
+    const RouteComponent = viewsMap[path];
     return routes.concat({
       key: id,
       path,
-      component: viewsMap[path]
+      children: routeProps => <RouteComponent {...routeProps} meta={node} />
     });
   }, routes);
 
@@ -73,6 +74,7 @@ function ContentBar() {
 
   useEffect(() => {
     dispatch(setRegions);
+    dispatch(setCategories);
   }, [dispatch]);
 
   return (

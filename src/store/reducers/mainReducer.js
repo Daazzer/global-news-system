@@ -1,3 +1,4 @@
+import { getCategories } from '@/api/newsManage';
 import { getRegions } from '@/api/regionList';
 import { getMenus } from '@/api/user';
 import { SystemState } from '@/utils/enums';
@@ -5,7 +6,8 @@ import { SystemState } from '@/utils/enums';
 const initState = {
   menus: [],  // 所有菜单权限
   userMenus: [],  // 当前用户菜单权限
-  regions: []  // 当前用户区域
+  regions: [],  // 当前用户区域
+  categories: []  // 新闻分类
 };
 
 export const setAllMenus = async (dispatch, getState) => {
@@ -38,6 +40,12 @@ export const setRegions = async (dispatch, getState) => {
   dispatch({ type: 'main/SET_REGIONS', payload: regions });
 };
 
+export const setCategories = async dispatch => {
+  const res = await getCategories();
+  const categories = res.data;
+  dispatch({ type: 'main/SET_CATEGORIES', payload: categories });
+};
+
 /**
  * 后台主页模块
  * @param {object} state
@@ -52,6 +60,8 @@ const mainReducer = (state = initState, action) => {
       return { ...state, userMenus: action.payload };
     case 'main/SET_REGIONS':
       return { ...state, regions: action.payload };
+    case 'main/SET_CATEGORIES':
+      return { ...state, categories: action.payload };
     default:
       return state;
   }
