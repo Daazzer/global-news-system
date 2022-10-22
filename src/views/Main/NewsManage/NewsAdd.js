@@ -43,7 +43,7 @@ function NewsAdd({ meta }) {
     }[auditState];
     const successDesc = {
       [AuditState.UNAUDITED]: '草稿箱',
-      [AuditState.AUDIT]: '提交审核'
+      [AuditState.AUDIT]: '审核新闻'
     }[auditState];
     const path = {
       [AuditState.UNAUDITED]: '/news-manage/draft',
@@ -63,7 +63,7 @@ function NewsAdd({ meta }) {
 
     notification.success({
       message: `${successMessage}成功`,
-      description: `您可以到${successDesc}查看新闻`,
+      description: `您可以到${successDesc}查看情况`,
       placement: 'bottomRight'
     });
 

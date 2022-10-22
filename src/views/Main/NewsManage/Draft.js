@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Button, message, Popconfirm, Table } from 'antd';
+import { Button, message, notification, Popconfirm, Table } from 'antd';
 import { EditOutlined, AuditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { delNews, getNews } from '@/api/newsManage';
+import { delNews, getNews, setNews } from '@/api/newsManage';
 import { AuditState, Role } from '@/utils/enums';
 import style from './Draft.module.scss';
 
@@ -23,6 +23,15 @@ function Draft() {
 
     setDataSource(dataSource);
   }, [user]);
+
+  const handleAudit = async row => {
+    await setNews(row.id, { auditState: AuditState.AUDIT });
+    history.push('/audit-manage/audit-news');
+    notification.success({
+      message: '提交审核成功',
+      description: '请到审核新闻中查看情况'
+    });
+  };
 
   const handleDel = async row => {
     await delNews(row.id);
@@ -71,13 +80,19 @@ function Draft() {
             icon={<EditOutlined />}
             onClick={() => history.push(`/news-manage/news-edit/${row.id}`, { activePath: '/news-manage/news-add' })}
           />
-          <Button
-            className="option__button"
-            type="primary"
-            shape="circle"
-            icon={<AuditOutlined />}
-            onClick={() => history.push(`/news-manage/news-edit/${row.id}`)}
-          />
+          <Popconfirm
+            okText="确定"
+            cancelText="取消"
+            title={`你确定要提交审核“${row.title}”吗？`}
+            onConfirm={() => handleAudit(row)}
+          >
+            <Button
+              className="option__button"
+              type="primary"
+              shape="circle"
+              icon={<AuditOutlined />}
+            />
+          </Popconfirm>
           <Popconfirm
             okText="确定"
             cancelText="取消"
