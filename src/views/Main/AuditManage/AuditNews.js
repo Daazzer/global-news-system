@@ -46,13 +46,7 @@ function AuditNews() {
     initDataSource();
   }, [initDataSource]);
 
-
   const columns = [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-    },
     {
       title: '新闻标题',
       dataIndex: 'title',
