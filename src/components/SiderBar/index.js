@@ -52,24 +52,31 @@ const getItems = menus => {
   return fn(menus);
 };
 
-const useKeys = () => {
-  const location = useLocation();
+const getKeys = location => {
   const keys = location.pathname.split('/');
-  const defaultOpenKeys = keys.filter((_, index) => index);
+  const openKeys = keys.filter((_, index) => index);
   const selectedKeys = [keys[keys.length - 1]];
 
   return {
-    defaultOpenKeys,
+    openKeys,
     selectedKeys
   };
 };
 
 function SiderBar() {
   const dispatch = useDispatch();
-  const { defaultOpenKeys, selectedKeys } = useKeys();
-  const [items, setItems] = useState([]);
+  const location = useLocation();
   const { collapsed } = useSelector(state => state.style);
   const { userMenus } = useSelector(state => state.main);
+  const [openKeys, setOpenKeys] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const { openKeys, selectedKeys } = getKeys(location);
+    setOpenKeys(state => openKeys.concat(state));
+    setSelectedKeys(selectedKeys);
+  }, [location]);
 
   useEffect(() => {
     dispatch(setAllMenus);
@@ -115,9 +122,10 @@ function SiderBar() {
         theme="dark"
         mode="inline"
         className={style.sideBarMenu}
-        defaultOpenKeys={defaultOpenKeys}
+        openKeys={openKeys}
         selectedKeys={selectedKeys}
         items={items}
+        onOpenChange={setOpenKeys}
       />
     </Sider>
   );
