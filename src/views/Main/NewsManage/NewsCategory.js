@@ -9,25 +9,25 @@ import { delCategory, setCategory } from '@/api/newsManage';
 import style from './NewsCategory.module.scss';
 
 /**
- * 区域列表
+ * 新闻分类列表
  * @returns {React.ReactNode}
  */
 function NewsCategory() {
   const dispatch = useDispatch();
   const nameInputRef = useRef(null);
   const { categories: dataSource } = useSelector(state => state.main);
-  const [regionModalForm] = Form.useForm();
+  const [categoryModalForm] = Form.useForm();
   const [regionForm] = Form.useForm();
   const [editRowId, setEditRowId] = useState(null);
-  const [isRegionModalFormOpen, setIsRegionModalFormOpen] = useState(false);
+  const [isCategoryModalFormOpen, setIsCategoryModalFormOpen] = useState(false);
 
-  const handleRegionModalFormOpen = () => {
-    regionModalForm.setFieldsValue({ name: undefined });
-    setIsRegionModalFormOpen(true);
+  const handleCategoryModalFormOpen = () => {
+    categoryModalForm.setFieldsValue({ name: undefined });
+    setIsCategoryModalFormOpen(true);
   };
   
-  const handleUserModalFormOk = () => {
-    setIsRegionModalFormOpen(false);
+  const handleCategoryModalFormOk = () => {
+    setIsCategoryModalFormOpen(false);
     dispatch(setCategories);
   };
 
@@ -123,7 +123,7 @@ function NewsCategory() {
         className="news-category__button"
         type="primary"
         icon={<PlusOutlined />}
-        onClick={handleRegionModalFormOpen}
+        onClick={handleCategoryModalFormOpen}
       >添加新闻分类</Button>
       <Form form={regionForm}>
         <Table
@@ -134,10 +134,10 @@ function NewsCategory() {
         />
       </Form>
       <CategoryModalForm
-        open={isRegionModalFormOpen}
-        form={regionModalForm}
-        onOk={handleUserModalFormOk}
-        onCancel={() => setIsRegionModalFormOpen(false)}
+        open={isCategoryModalFormOpen}
+        form={categoryModalForm}
+        onOk={handleCategoryModalFormOk}
+        onCancel={() => setIsCategoryModalFormOpen(false)}
       />
     </div>
   );
