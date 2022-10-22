@@ -3,9 +3,6 @@ import { PublishState } from '@/utils/enums';
 import store from '@/store';
 import http from './http';
 
-/** 新闻分类 */
-export const getCategories = params => http.get('/categories', { params });
-
 /** 添加新闻 */
 export const addNews = data => http.post('/news', {
   publishState: PublishState.UNPUBLISHED,
@@ -17,6 +14,7 @@ export const addNews = data => http.post('/news', {
   ...data
 });
 
+/** 修改新闻 */
 export const setNews = (id, data) => http.patch(`/news/${id}`, data);
 
 /** 获取新闻列表 */
@@ -30,3 +28,15 @@ export const getNewsDetail = id => http.get(`/news/${id}`);
 
 /** 删除新闻 */
 export const delNews = id => http.delete(`/news/${id}`);
+
+/** 获取新闻分类列表 */
+export const getCategories = params => http.get('/categories', { params });
+
+/** 新增新闻分类 */
+export const addCategory = data => http.post('/categories', data);
+
+/** 设置新闻分类 */
+export const setCategory = (id, data) => http.patch(`/categories/${id}`, data);
+
+/** 删除新闻分类 */
+export const delCategory = id => http.delete(`/categories/${id}`);

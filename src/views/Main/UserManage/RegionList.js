@@ -21,6 +21,11 @@ function RegionList() {
   const [editRowId, setEditRowId] = useState(null);
   const [isRegionModalFormOpen, setIsRegionModalFormOpen] = useState(false);
 
+  const handleRegionModalFormOpen = () => {
+    regionModalForm.setFieldsValue({ name: undefined });
+    setIsRegionModalFormOpen(true)
+  };
+
   const handleUserModalFormOk = () => {
     setIsRegionModalFormOpen(false);
     dispatch(setRegions);
@@ -118,7 +123,7 @@ function RegionList() {
         className="region-list__button"
         type="primary"
         icon={<PlusOutlined />}
-        onClick={() => setIsRegionModalFormOpen(true)}
+        onClick={handleRegionModalFormOpen}
       >添加区域</Button>
       <Form form={regionForm}>
         <Table

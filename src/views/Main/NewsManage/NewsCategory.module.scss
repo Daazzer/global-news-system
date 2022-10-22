@@ -1,0 +1,27 @@
+.newsCategory {
+  :global {
+    .news-category__button {
+      margin-bottom: 20px;
+    }
+
+    .editable-cell {
+      padding: 4px 11px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      &:hover {
+        border-color: #d9d9d9;
+        border-radius: 2px;
+      }
+    }
+  }
+}
+
+.option {
+  :global {
+    .option__button {
+      & + .option__button {
+        margin-left: 15px;
+      }
+    }
+  }
+}
