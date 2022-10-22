@@ -15,6 +15,7 @@ function AuditList() {
   const initDataSource = useCallback(async () => {
     const res = await getNews({
       auditState_ne: AuditState.UNAUDITED,
+      publishState: PublishState.UNPUBLISHED,
       userId: user.roleId === Role.ADMIN ? undefined : user.id,
       _expand: ['user', 'category']
     });

@@ -1,6 +1,84 @@
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Button, notification, Table } from 'antd';
+import { getNews, setNews } from '@/api/newsManage';
+import { AuditState, PublishState, Role } from '@/utils/enums';
+
 function Published() {
+  const { user } = useSelector(state => state.login);
+  const [dataSource, setDataSource] = useState([]);
+  const initDataSource = useCallback(async () => {
+    const res = await getNews({
+      publishState: PublishState.PUBLISHED,
+      auditState: AuditState.APPROVED,
+      userId: user.roleId === Role.ADMIN ? undefined : user.id,
+      _expand: ['user', 'category']
+    });
+
+    const dataSource = res.data;
+
+    setDataSource(dataSource);
+  }, [user]);
+
+  const handleRevoke = async row => {
+    await setNews(row.id, { publishState: PublishState.REVOKED });
+    notification.success({
+      message: '已下线',
+      description: '您可以到已下线中查看情况',
+      placement: 'bottomRight'
+    });
+    initDataSource();
+  };
+
+  useEffect(() => {
+    initDataSource();
+  }, [initDataSource]);
+
+  const columns = [
+    {
+      title: '新闻标题',
+      dataIndex: 'title',
+      key: 'title',
+      render: (value, row) => <Link to={{
+        pathname: `/news-manage/news-view/${row.id}`,
+        state: { activePath: '/news-manage/news-add' }
+      }}>{value}</Link>
+    },
+    {
+      title: '作者',
+      dataIndex: 'user',
+      key: 'user',
+      render: value => value?.username || ''
+    },
+    {
+      title: '分类',
+      dataIndex: 'category',
+      key: 'category',
+      render: value => value?.name || ''
+    },
+    {
+      title: '操作',
+      key: 'option',
+      render: row => (
+        <div className="option">
+          <Button
+            className="option__button"
+            type="primary"
+            onClick={() => handleRevoke(row)}
+          >下线</Button>
+        </div>
+      )
+    }
+  ];
+
   return (
-    <div>Published</div>
+    <Table
+      pagination={{ pageSize: 5 }}
+      dataSource={dataSource}
+      columns={columns}
+      rowKey={row => row.id}
+    />
   );
 }
 

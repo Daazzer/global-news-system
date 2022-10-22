@@ -24,8 +24,9 @@ function Unpublished() {
   const handlePublish = async row => {
     await setNews(row.id, { publishState: PublishState.PUBLISHED });
     notification.success({
-      massage: '发布成功',
-      description: '您可以到已发布中查看情况'
+      message: '发布成功',
+      description: '您可以到已发布中查看情况',
+      placement: 'bottomRight'
     });
     initDataSource();
   };
