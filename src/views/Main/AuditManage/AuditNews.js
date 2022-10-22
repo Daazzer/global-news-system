@@ -5,6 +5,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { getNews, setNews } from '@/api/newsManage';
 import { AuditState, Role } from '@/utils/enums';
 import style from './AuditNews.module.scss';
+import { Link } from 'react-router-dom';
 
 function AuditNews() {
   const { user } = useSelector(state => state.login);
@@ -12,7 +13,7 @@ function AuditNews() {
 
   const initDataSource = useCallback(async () => {
     const res = await getNews({
-      auditState: AuditState.UNAUDITED,
+      auditState: AuditState.AUDIT,
       userId: user.roleId === Role.ADMIN ? undefined : user.id,
       _expand: ['user', 'category']
     });
@@ -29,13 +30,13 @@ function AuditNews() {
       [AuditState.APPROVED]: '已通过',
       [AuditState.UNAPPROVED]: '已驳回'
     }[auditState];
-    
+
     const notificationOption = {
       message,
       description: '请到审核列表查看情况',
       placement: 'bottomRight'
     };
-    
+
     notification.success(notificationOption);
 
     initDataSource();
@@ -56,6 +57,10 @@ function AuditNews() {
       title: '新闻标题',
       dataIndex: 'title',
       key: 'title',
+      render: (value, row) => <Link to={{
+        pathname: `/news-manage/news-view/${row.id}`,
+        state: { activePath: '/news-manage/news-add' }
+      }}>{value}</Link>
     },
     {
       title: '作者',

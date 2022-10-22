@@ -89,6 +89,12 @@ function ContentBar() {
               meta={{ name: '编辑新闻' }}
             />}
           </Route>
+          <Route path="/news-manage/news-view/:id">
+            {routeProps => <NewsAdd
+              {...routeProps}
+              meta={{ name: '查看新闻' }}
+            />}
+          </Route>
           <Route path="*">{NotFound}</Route>
         </Switch>
         : null}

@@ -12,6 +12,7 @@ function NewsAdd({ meta }) {
   const routeMatch = useRouteMatch();
   const { params, path } = routeMatch;
   const isEdit = path.includes('news-edit');
+  const isView = path.includes('news-view');
   const [form] = Form.useForm();
   const { categories } = useSelector(state => state.main);
   const [title, setTitle] = useState('');
@@ -71,7 +72,7 @@ function NewsAdd({ meta }) {
   };
 
   const initFormData = useCallback(async () => {
-    if (!isEdit) return;
+    if (!isEdit && !isView) return;
     const res = await getNewsDetail(params.id);
     const { data } = res;
     const { title, categoryId, content } = data;
@@ -84,7 +85,7 @@ function NewsAdd({ meta }) {
     setContent(content);
     setTitle(title);
     setData(data);
-  }, [form, isEdit, params.id]);
+  }, [form, isEdit, isView, params.id]);
 
   useEffect(() => {
     initFormData();
@@ -95,7 +96,7 @@ function NewsAdd({ meta }) {
       <PageHeader
         title={meta.name}
         subTitle={title}
-        onBack={isEdit ? () => history.goBack() : null}
+        onBack={isEdit || isView ? () => history.goBack() : null}
       />
       <Form
         className="news-form"
@@ -154,7 +155,7 @@ function NewsAdd({ meta }) {
           />
         </Form.Item>
       </Form>
-      <div className="button-bar">
+      {!isView && <div className="button-bar">
         <Button
           className="button-bar__button"
           type="primary"
@@ -165,7 +166,7 @@ function NewsAdd({ meta }) {
           className="button-bar__button"
           onClick={() => handleSubmitAudit(AuditState.AUDIT)}
         >提交审核</Button>
-      </div>
+      </div>}
     </div>
   );
 }
