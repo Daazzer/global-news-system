@@ -15,7 +15,7 @@ export const SystemDefault = {
  * @readonly
  * @enum {number}
  */
- export const SystemState = {
+export const SystemState = {
   /** 停用 */
   DISABLED: 0,
   /** 启用 */
@@ -58,4 +58,34 @@ export const Region = {
   OCEANIA: 7,
   /** 南极洲 */
   ANTARCTICA: 8
+};
+
+/**
+ * 审核状态
+ * @readonly
+ * @enum {number}
+ */
+export const AuditState = {
+  /** 未审核 */
+  UNAUDITED: 0,
+  /** 审核中 */
+  AUDIT: 1,
+  /** 已通过 */
+  APPROVED: 2,
+  /** 未通过 */
+  UNAPPROVED: 3
+};
+
+/**
+ * 发布状态
+ * @readonly
+ * @enum {number}
+ */
+export const PublishState = {
+  /** 待发布 */
+  UNPUBLISHED: 1,
+  /** 已发布 */
+  PUBLISHED: 2,
+  /** 已下线 */
+  REVOKED: 3
 };
