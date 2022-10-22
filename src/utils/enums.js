@@ -73,7 +73,27 @@ export const AuditState = {
   /** 已通过 */
   APPROVED: 2,
   /** 未通过 */
-  UNAPPROVED: 3
+  UNAPPROVED: 3,
+  get options() {
+    return [
+      {
+        label: '未审核',
+        value: this.UNAUDITED
+      },
+      {
+        label: '审核中',
+        value: this.AUDIT
+      },
+      {
+        label: '已通过',
+        value: this.APPROVED
+      },
+      {
+        label: '未通过',
+        value: this.UNAPPROVED
+      }
+    ];
+  }
 };
 
 /**

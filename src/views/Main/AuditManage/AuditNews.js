@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Button, notification, Table } from 'antd';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { getNews, setNews } from '@/api/newsManage';
 import { AuditState, Role } from '@/utils/enums';
 import style from './AuditNews.module.scss';
-import { Link } from 'react-router-dom';
 
 function AuditNews() {
   const { user } = useSelector(state => state.login);
