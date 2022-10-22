@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Layout } from 'antd';
+import NProgress from 'nprogress';
 import { getAssembleTree } from '@/utils';
 import { setCategories, setRegions } from '@/store/reducers/mainReducer';
 import Home from '@/views/Main/Home';
@@ -62,10 +63,15 @@ const getRoutes = menusTree => {
 };
 
 function ContentBar() {
+  NProgress.start();
   const dispatch = useDispatch();
   const [routes, setRoutes] = useState([]);
   const { userMenus } = useSelector(state => state.main);
 
+  useEffect(() => {
+    NProgress.done();
+  });
+  
   useEffect(() => {
     const userMenusTree = getAssembleTree(userMenus);
     const routes = getRoutes(userMenusTree);
