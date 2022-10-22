@@ -1,24 +1,30 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Button, Form, Input, notification, PageHeader, Select } from 'antd';
 import NewsEditor from '@/components/NewsEditor';
 import style from './NewsAdd.module.scss';
 import { AuditState } from '@/utils/enums';
-import { addNews } from '@/api/newsManage';
+import { addNews, getNewsDetail, setNews } from '@/api/newsManage';
 
 function NewsAdd({ meta }) {
   const history = useHistory();
+  const routeMatch = useRouteMatch();
+  const { params, path } = routeMatch;
+  const isEdit = path.includes('news-edit');
   const [form] = Form.useForm();
   const { categories } = useSelector(state => state.main);
   const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [data, setData] = useState({});
 
   const handleEditorStateChange = content => {
-    form.setFieldValue('content', content)
+    form.setFieldValue('content', content);
     form.validateFields(['content']);
   };
 
   const handleSave = async auditState => {
+    const isEdit = routeMatch.path.includes('news-edit');
     const successMessage = {
       [AuditState.UNAUDITED]: '保存草稿',
       [AuditState.AUDIT]: '提交审核'
@@ -33,10 +39,17 @@ function NewsAdd({ meta }) {
     }[auditState];
     const formData = await form.validateFields();
 
-    await addNews({
-      ...formData,
-      auditState
-    });
+    if (isEdit) {
+      await setNews(data.id, {
+        ...formData,
+        auditState
+      });
+    } else {
+      await addNews({
+        ...formData,
+        auditState
+      });
+    }
 
     notification.success({
       message: `${successMessage}成功`,
@@ -47,11 +60,32 @@ function NewsAdd({ meta }) {
     history.push(path);
   };
 
+  const initFormData = useCallback(async () => {
+    if (!isEdit) return;
+    const res = await getNewsDetail(params.id);
+    const { data } = res;
+    const { title, categoryId, content } = data;
+    const formData = {
+      title,
+      categoryId,
+      content
+    };
+    form.setFieldsValue(formData);
+    setContent(content);
+    setTitle(title);
+    setData(data);
+  }, [form, isEdit, params.id]);
+
+  useEffect(() => {
+    initFormData();
+  }, [initFormData]);
+
   return (
     <div className={style.newsAdd}>
       <PageHeader
         title={meta.name}
         subTitle={title}
+        onBack={isEdit ? () => history.goBack() : null}
       />
       <Form
         className="news-form"
@@ -104,7 +138,10 @@ function NewsAdd({ meta }) {
             }
           ]}
         >
-          <NewsEditor onEditorStateChange={handleEditorStateChange} />
+          <NewsEditor
+            content={content}
+            onEditorStateChange={handleEditorStateChange}
+          />
         </Form.Item>
       </Form>
       <div className="button-bar">

@@ -69,7 +69,7 @@ function Draft() {
             type="primary"
             shape="circle"
             icon={<EditOutlined />}
-            onClick={() => history.push(`/news-manage/news-edit/${row.id}`)}
+            onClick={() => history.push(`/news-manage/news-edit/${row.id}`, { activePath: '/news-manage/news-add' })}
           />
           <Button
             className="option__button"

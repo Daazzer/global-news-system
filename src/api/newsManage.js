@@ -17,11 +17,16 @@ export const addNews = data => http.post('/news', {
   ...data
 });
 
+export const setNews = (id, data) => http.patch(`/news/${id}`, data);
+
 /** 获取新闻列表 */
 export const getNews = params => http.get(`/news${params
   ? '?' + qs.stringify(params, { indices: false })
   : ''}`
 );
+
+/** 获取新闻详情 */
+export const getNewsDetail = id => http.get(`/news/${id}`);
 
 /** 删除新闻 */
 export const delNews = id => http.delete(`/news/${id}`);

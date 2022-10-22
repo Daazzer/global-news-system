@@ -83,6 +83,12 @@ function ContentBar() {
         ? <Switch>
           <Redirect exact from="/" to={routes[0].path} />
           {routes.map(route => <Route {...route} />)}
+          <Route path="/news-manage/news-edit/:id">
+            {routeProps => <NewsAdd
+              {...routeProps}
+              meta={{ name: '编辑新闻' }}
+            />}
+          </Route>
           <Route path="*">{NotFound}</Route>
         </Switch>
         : null}

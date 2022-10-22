@@ -52,8 +52,8 @@ const getItems = menus => {
   return fn(menus);
 };
 
-const getKeys = location => {
-  const keys = location.pathname.split('/');
+const getKeys = pathname => {
+  const keys = pathname.split('/');
   const openKeys = keys.filter((_, index) => index);
   const selectedKeys = [keys[keys.length - 1]];
 
@@ -73,7 +73,8 @@ function SiderBar() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    const { openKeys, selectedKeys } = getKeys(location);
+    const pathname = location.state?.activePath || location.pathname;
+    const { openKeys, selectedKeys } = getKeys(pathname);
     setOpenKeys(state => openKeys.concat(state));
     setSelectedKeys(selectedKeys);
   }, [location]);
