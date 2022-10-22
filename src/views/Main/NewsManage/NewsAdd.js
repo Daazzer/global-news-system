@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { Button, Form, Input, notification, PageHeader, Select } from 'antd';
+import { Button, Form, Input, Modal, notification, PageHeader, Select } from 'antd';
 import NewsEditor from '@/components/NewsEditor';
 import style from './NewsAdd.module.scss';
 import { AuditState } from '@/utils/enums';
@@ -23,6 +23,18 @@ function NewsAdd({ meta }) {
     form.validateFields(['content']);
   };
 
+  const handleSubmitAudit = auditState => {
+    Modal.confirm({
+      style: { top: 260 },
+      maskClosable: true,
+      title: '警告',
+      content: '是否提交审核？',
+      okText: '确定',
+      cancelText: '取消',
+      onOk: () => handleSave(auditState)
+    });
+  };
+
   const handleSave = async auditState => {
     const isEdit = routeMatch.path.includes('news-edit');
     const successMessage = {
@@ -38,17 +50,15 @@ function NewsAdd({ meta }) {
       [AuditState.AUDIT]: '/audit-manage/audit-news'
     }[auditState];
     const formData = await form.validateFields();
+    const req = {
+      ...formData,
+      auditState
+    };
 
     if (isEdit) {
-      await setNews(data.id, {
-        ...formData,
-        auditState
-      });
+      await setNews(data.id, req);
     } else {
-      await addNews({
-        ...formData,
-        auditState
-      });
+      await addNews(req);
     }
 
     notification.success({
@@ -153,7 +163,7 @@ function NewsAdd({ meta }) {
         <Button
           danger
           className="button-bar__button"
-          onClick={() => handleSave(AuditState.AUDIT)}
+          onClick={() => handleSubmitAudit(AuditState.AUDIT)}
         >提交审核</Button>
       </div>
     </div>
