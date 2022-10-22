@@ -43,7 +43,7 @@ function Draft() {
 
   useEffect(() => {
     initDataSource();
-  }, [initDataSource])
+  }, [initDataSource]);
 
   const columns = [
     {

@@ -1,0 +1,9 @@
+.option {
+  :global {
+    .option__button {
+      & + .option__button {
+        margin-left: 15px;
+      }
+    }
+  }
+}
