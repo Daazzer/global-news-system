@@ -1,21 +1,26 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import * as echarts from 'echarts';
+import _ from 'lodash';
+import { useSelector } from 'react-redux';
 
 /**
  * 个人新闻分类图示
  * @returns {React.ReactNode}
  */
-function UserCatetoryChart() {
+function UserCatetoryChart({ data }) {
+  const { user } = useSelector(state => state.login);
   const chartRef = useRef();
-  const initChart = () => {
+
+  const initChart = useCallback(() => {
     let chart = echarts.getInstanceByDom(chartRef.current);
     if (!chart) {
       chart = echarts.init(chartRef.current);
     }
+    const userData = data.filter(item => item.userId === user.id);
+    const dataGroup = _.groupBy(userData, item => item.category.name);
     const option = {
       title: {
-        text: 'Referer of a Website',
-        subtext: 'Fake Data',
+        text: '当前用户新闻分类图示',
         left: 'center'
       },
       tooltip: {
@@ -27,16 +32,13 @@ function UserCatetoryChart() {
       },
       series: [
         {
-          name: 'Access From',
+          name: '发布数量',
           type: 'pie',
           radius: '50%',
-          data: [
-            { value: 1048, name: 'Search Engine' },
-            { value: 735, name: 'Direct' },
-            { value: 580, name: 'Email' },
-            { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' }
-          ],
+          data: Object.entries(dataGroup).map(([k, v]) => ({
+            name: k,
+            value: v.length
+          })),
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
@@ -48,11 +50,11 @@ function UserCatetoryChart() {
       ]
     };
     chart.setOption(option);
-  };
+  }, [data, user]);
 
   useEffect(() => {
     initChart();
-  }, []);
+  }, [initChart]);
 
   return (
     <div ref={chartRef} style={{ height: 400 }} />
