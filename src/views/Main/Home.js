@@ -13,6 +13,16 @@ function Home() {
   const [open, setOpen] = useState(false);
   const [viewDataSource, setViewDataSource] = useState([]);
   const [starDataSource, setStarDataSource] = useState([]);
+  const [news, setNews] = useState([]);
+
+  const initNews = async () => {
+    const res = await getNews({
+      publishState: PublishState.PUBLISHED,
+      _expand: 'category'
+    });
+    const news = res.data;
+    setNews(news);
+  };
 
   const initViewDataSource = async () => {
     const res = await getNews({
@@ -49,6 +59,7 @@ function Home() {
   useEffect(() => {
     initViewDataSource();
     initStarDataSource();
+    initNews();
   }, []);
 
   return (
@@ -107,9 +118,9 @@ function Home() {
         onClose={onClose}
         open={open}
       >
-        <UserCatetoryChart />
+        <UserCatetoryChart data={news} />
       </Drawer>
-      <CatetoryChart />
+      <CatetoryChart data={news} />
     </div>
   );
 }

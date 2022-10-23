@@ -1,35 +1,31 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import * as echarts from 'echarts';
+import _ from 'lodash';
 
 /**
  * 新闻分类图示
  * @returns {React.ReactNode}
  */
-function CatetoryChart() {
+function CatetoryChart({ data }) {
   const chartRef = useRef();
 
-  const initChart = () => {
+  const initChart = useCallback(() => {
     let chart = echarts.getInstanceByDom(chartRef.current);
     if (!chart) {
       chart = echarts.init(chartRef.current);
     }
+    const categoryGroup = _.groupBy(data, item => item.category.name);
     const option = {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        }
+      title: {
+        text: '新闻分类图示'
       },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
+      tooltip: {},
+      legend: {
+        data: ['数量']
       },
       xAxis: [
         {
-          type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: Object.keys(categoryGroup),
           axisTick: {
             alignWithLabel: true
           }
@@ -37,24 +33,24 @@ function CatetoryChart() {
       ],
       yAxis: [
         {
-          type: 'value'
+          type: 'value',
+          minInterval: 1
         }
       ],
       series: [
         {
-          name: 'Direct',
+          name: '数量',
           type: 'bar',
-          barWidth: '60%',
-          data: [10, 52, 200, 334, 390, 330, 220]
+          data: Object.values(categoryGroup).map(item => item.length)
         }
       ]
     };
     chart.setOption(option);
-  };
+  }, [data]);
 
   useEffect(() => {
     initChart();
-  }, []);
+  }, [initChart]);
 
   return (
     <div ref={chartRef} style={{ height: 400 }} />
