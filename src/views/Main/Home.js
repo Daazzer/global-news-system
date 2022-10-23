@@ -1,21 +1,42 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, Card, Col, Drawer, List, Row } from 'antd';
 import { EditOutlined, EllipsisOutlined, PieChartOutlined } from '@ant-design/icons';
 import CatetoryChart from '@/components/CatetoryChart';
 import UserCatetoryChart from '@/components/UserCatetoryChart';
+import { getNews } from '@/api/newsManage';
+import { PublishState } from '@/utils/enums';
+import { Link } from 'react-router-dom';
 
 const { Meta } = Card;
 
 function Home() {
   const [open, setOpen] = useState(false);
+  const [viewDataSource, setViewDataSource] = useState([]);
+  const [starDataSource, setStarDataSource] = useState([]);
 
-  const data = [
-    'Racing car sprays burning fuel into crowd.',
-    'Japanese princess to wed commoner.',
-    'Australian walks 100km after outback crash.',
-    'Man charged over missing wedding girl.',
-    'Los Angeles battles huge wildfires.',
-  ];
+  const initViewDataSource = async () => {
+    const res = await getNews({
+      publishState: PublishState.PUBLISHED,
+      _expand: 'category',
+      _sort: 'view',
+      _order: 'desc',
+      limit: 6
+    });
+    const viewDataSource = res.data;
+    setViewDataSource(viewDataSource);
+  };
+
+  const initStarDataSource = async () => {
+    const res = await getNews({
+      publishState: PublishState.PUBLISHED,
+      _expand: 'category',
+      _sort: 'star',
+      _order: 'desc',
+      limit: 6
+    });
+    const starDataSource = res.data;
+    setStarDataSource(starDataSource);
+  };
 
   const showDrawer = () => {
     setOpen(true);
@@ -25,15 +46,22 @@ function Home() {
     setOpen(false);
   };
 
+  useEffect(() => {
+    initViewDataSource();
+    initStarDataSource();
+  }, []);
+
   return (
     <div className="home">
       <Row gutter={20}>
         <Col span={8}>
           <Card title="用户最常浏览">
             <List
-              dataSource={data}
-              renderItem={(item) => (
-                <List.Item>{item}</List.Item>
+              dataSource={viewDataSource}
+              renderItem={item => (
+                <List.Item>
+                  <Link to={`/news-manage/news-view/${item.id}`}>{item.title}</Link>
+                </List.Item>
               )}
             />
           </Card>
@@ -41,9 +69,11 @@ function Home() {
         <Col span={8}>
           <Card title="用户点赞最多">
             <List
-              dataSource={data}
-              renderItem={(item) => (
-                <List.Item>{item}</List.Item>
+              dataSource={starDataSource}
+              renderItem={item => (
+                <List.Item>
+                  <Link to={`/news-manage/news-view/${item.id}`}>{item.title}</Link>
+                </List.Item>
               )}
             />
           </Card>
