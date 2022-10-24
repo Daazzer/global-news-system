@@ -10,7 +10,7 @@ export const addNews = data => http.post('/news', {
   createTime: Date.now(),
   publishTime: 0,
   like: 0,
-  view: 9,
+  view: 0,
   ...data
 });
 
