@@ -10,6 +10,7 @@ import NProgress from 'nprogress';
 import Login from '@/views/Login';
 import Main from '@/views/Main';
 import News from '@/views/News';
+import NewsDetail from '@/views/News/NewsDetail';
 import NotFound from '@/views/NotFound';
 
 function AppRouter() {
@@ -33,6 +34,9 @@ function AppRouter() {
         </Route>
         <Route exact path="/news">
           <News />
+        </Route>
+        <Route exact path="/news/:id">
+          <NewsDetail />
         </Route>
         <Route exact={!user} path="/">
           {() => (

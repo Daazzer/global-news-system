@@ -24,7 +24,10 @@ export const getNews = params => http.get(`/news${params
 );
 
 /** 获取新闻详情 */
-export const getNewsDetail = id => http.get(`/news/${id}`);
+export const getNewsDetail = (id, params) => http.get(`/news/${id}${params
+  ? '?' + qs.stringify(params, { indices: false })
+  : ''}`
+);
 
 /** 删除新闻 */
 export const delNews = id => http.delete(`/news/${id}`);

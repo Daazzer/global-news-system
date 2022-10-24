@@ -40,7 +40,7 @@ export function getAssembleTree(
  * @param {{ label: string; value: ValueType }[]} options 枚举选项
  * @returns {string}
  */
-export function getOptionsLabel(value, options) {
-  const option = options.find(option => option.value === value);
-  return option?.label || '';
+export function getOptionsLabel(value, options, { labelKey = 'label', valueKey = 'value' }) {
+  const option = options.find(option => option[valueKey] === value);
+  return option?.[labelKey] || '';
 }

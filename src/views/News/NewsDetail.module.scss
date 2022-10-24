@@ -1,0 +1,26 @@
+.newsDetail {
+  padding: 10px 20px;
+  :global {
+    .news-detail {
+      &__news-header {
+        padding: 16px 0;
+      }
+      &__news-content {
+        margin-top: 20px;
+      }
+    }
+  }
+}
+
+.newsSubTitle {
+  display: flex;
+  align-items: center;
+  :global {
+    .sub-title__text {
+      margin-right: 10px;
+    }
+    .sub-title__like-icon {
+      cursor: pointer;
+    }
+  }
+}

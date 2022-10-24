@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Card, Col, List, PageHeader, Pagination, Row } from 'antd';
+import { Link, useHistory } from 'react-router-dom';
+import { Card, Col, List, PageHeader, Row } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import { getNews } from '@/api/newsManage';
@@ -40,7 +40,7 @@ function News() {
         {Object.entries(newsCategoryMap).map(([title, dataSource]) => (
           <Col key={title} span={8}>
             <Card
-              title={title}
+              title={<strong>{title}</strong>}
               hoverable
               bordered
             >
@@ -49,7 +49,7 @@ function News() {
                 pagination={{ pageSize: 3 }}
                 renderItem={item => (
                   <List.Item>
-                    {item.title}
+                    <Link to={`/news/${item.id}`}>{item.title}</Link>
                   </List.Item>
                 )}
               />
