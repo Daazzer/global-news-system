@@ -56,10 +56,7 @@ function UserModalForm({
     if (state === 'add') {
       await addUser(formData);
     } else {
-      await setUser({
-        id: data.id,
-        ...formData
-      });
+      await setUser(data.id, formData);
     }
     message.success(stateText + '用户成功');
     onOk();
@@ -99,7 +96,7 @@ function UserModalForm({
             }
           ]}
         >
-          <Input maxLength={30} />
+          <Input disabled={state === 'edit'} maxLength={30} />
         </Form.Item>
         <Form.Item
           name="password"

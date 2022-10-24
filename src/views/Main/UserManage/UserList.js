@@ -34,10 +34,7 @@ function UserList() {
   }, [user]);
 
   const handleUserStateChange = async (value, row) => {
-    await setUser({
-      id: row.id,
-      state: value ? SystemState.ENABLED : SystemState.DISABLED
-    });
+    await setUser(row.id, { state: value ? SystemState.ENABLED : SystemState.DISABLED });
 
     initDataSource();
   };
