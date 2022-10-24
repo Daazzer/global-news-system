@@ -7,6 +7,7 @@ const initState = {
 export const setUser = id => async dispatch => {
   const res = await getUser(id, { _expand: ['region', 'role'] });
   const payload = res.data;
+  delete payload.password;
   dispatch({ type: 'login/SET_USER', payload });
 };
 
