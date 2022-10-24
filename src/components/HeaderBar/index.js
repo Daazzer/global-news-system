@@ -15,6 +15,10 @@ function HeaderBar() {
   const handleTriggerClick = () => dispatch({ type: 'style/TOGGLE_COLLAPSED' });
   const handleLogout = () => {
     dispatch({ type: 'login/SET_USER', payload: null });
+    dispatch({ type: 'main/SET_MENUS', payload: [] });
+    dispatch({ type: 'main/SET_USER_MENUS', payload: [] });
+    dispatch({ type: 'main/SET_REGIONS', payload: [] });
+    dispatch({ type: 'main/SET_CATEGORIES', payload: [] });
     history.replace('/login');
   };
 
