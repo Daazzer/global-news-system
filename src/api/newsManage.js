@@ -9,7 +9,7 @@ export const addNews = data => http.post('/news', {
   userId: store.getState().login.user.id,
   createTime: Date.now(),
   publishTime: 0,
-  star: 0,
+  like: 0,
   view: 9,
   ...data
 });

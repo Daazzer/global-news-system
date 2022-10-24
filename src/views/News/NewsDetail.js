@@ -57,7 +57,7 @@ function NewsDetail() {
         <Descriptions.Item label="发布者">{news.user?.username}</Descriptions.Item>
         <Descriptions.Item label="区域">{getOptionsLabel(news.user?.regionId, regions, { labelKey: 'name', valueKey: 'id' })}</Descriptions.Item>
         <Descriptions.Item label="浏览量">{news.view}</Descriptions.Item>
-        <Descriptions.Item label="点赞量">{news.star}</Descriptions.Item>
+        <Descriptions.Item label="点赞量">{news.like}</Descriptions.Item>
       </Descriptions>
       <div
         className="news-detail__news-content"

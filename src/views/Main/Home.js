@@ -40,7 +40,7 @@ function Home() {
     const res = await getNews({
       publishState: PublishState.PUBLISHED,
       _expand: 'category',
-      _sort: 'star',
+      _sort: 'like',
       _order: 'desc',
       limit: 6
     });

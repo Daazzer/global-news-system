@@ -6,6 +6,7 @@ export const getRoles = params => http.get('/roles', { params });
 export const addUser = data => http.post('/users', {
   state: SystemState.ENABLED,
   default: SystemDefault.NO,
+  likes: [],
   ...data
 });
 
