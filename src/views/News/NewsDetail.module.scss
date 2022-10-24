@@ -21,6 +21,9 @@
     }
     .sub-title__like-icon {
       cursor: pointer;
+      &--thumb-up {
+        color: #ff69b4;
+      }
     }
   }
 }

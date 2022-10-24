@@ -14,7 +14,7 @@ function HeaderBar() {
   const { collapsed } = useSelector(state => state.style);
   const handleTriggerClick = () => dispatch({ type: 'style/TOGGLE_COLLAPSED' });
   const handleLogout = () => {
-    dispatch({ type: 'login/LOGOUT' });
+    dispatch({ type: 'login/SET_USER', payload: null });
     history.replace('/login');
   };
 

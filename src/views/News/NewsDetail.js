@@ -1,24 +1,35 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Descriptions, PageHeader } from 'antd';
-import { LikeOutlined } from '@ant-design/icons';
+import { LikeOutlined, LikeFilled } from '@ant-design/icons';
 import style from './NewsDetail.module.scss';
-import { useCallback, useEffect, useState } from 'react';
 import { getNewsDetail } from '@/api/newsManage';
 import { getRegions } from '@/api/regionList';
+import { setNews as setNewsReq } from '@/api/newsManage';
 import { getOptionsLabel } from '@/utils';
+import { setUser as setUserReq } from '@/api/userList';
+import { setUser } from '@/store/reducers/loginReducer';
 
-function SubTitle({ text }) {
+function SubTitle({ text, onLike, news }) {
+  const { user } = useSelector(state => state.login);
+  const isLike = useMemo(() => user.likes.includes(news.id), [user, news.id]);
+
   return (
     <div className={style.newsSubTitle}>
       <span className="sub-title__text">{text}</span>
-      <LikeOutlined className="sub-title__like-icon" />
+      {isLike
+        ? <LikeFilled className="sub-title__like-icon sub-title__like-icon--thumb-up" onClick={onLike} />
+        : <LikeOutlined className="sub-title__like-icon" onClick={onLike} />}
     </div>
   );
 }
 
 function NewsDetail() {
+  const dispatch = useDispatch();
   const params = useParams();
   const history = useHistory();
+  const { user } = useSelector(state => state.login);
   const [news, setNews] = useState({});
   const [regions, setRegions] = useState([]);
 
@@ -31,14 +42,43 @@ function NewsDetail() {
   };
 
   const initNews = useCallback(async () => {
-    const res = await getNewsDetail(params.id, {
+    let res = await getNewsDetail(params.id, {
       _expand: ['category', 'user']
     });
 
-    const news = res.data;
+    let news = res.data;
+
+    if (!user.views.includes(news.id)) {
+      await setNewsReq(news.id, { view: news.view + 1 });
+      await setUserReq(user.id, { views: user.views.concat(news.id) });
+
+      dispatch(setUser(user.id));
+
+      res = await getNewsDetail(params.id, {
+        _expand: ['category', 'user']
+      });
+
+      news = res.data;
+    }
 
     setNews(news);
-  }, [params.id]);
+  }, [params.id, user, dispatch]);
+
+  const handleLike = async () => {
+    const newsReq = { like: news.like };
+    const userReq = { likes: user.likes };
+    if (user.likes.includes(news.id)) {
+      newsReq.like--;
+      userReq.likes = user.likes.filter(newsId => newsId !== news.id);
+    } else {
+      newsReq.like++;
+      userReq.likes = user.likes.concat(news.id);
+    }
+
+    await setNewsReq(news.id, newsReq);
+    await setUserReq(user.id, userReq);
+    dispatch(setUser(user.id));
+  };
 
   useEffect(() => {
     initNews();
@@ -50,7 +90,11 @@ function NewsDetail() {
       <PageHeader
         className="news-detail__news-header"
         title={news.title}
-        subTitle={<SubTitle text={news.category?.name} />}
+        subTitle={<SubTitle
+          text={news.category?.name}
+          news={news}
+          onLike={handleLike}
+        />}
         onBack={() => history.goBack()}
       />
       <Descriptions>

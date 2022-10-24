@@ -33,7 +33,7 @@ function Login() {
     }
 
     delete user.password;
-    dispatch({ type: 'login/LOGIN', payload: user });
+    dispatch({ type: 'login/SET_USER', payload: user });
     history.replace('/');
   };
 
