@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import NProgress from 'nprogress';
 import Login from '@/views/Login';
 import Main from '@/views/Main';
+import News from '@/views/News';
 import NotFound from '@/views/NotFound';
 
 function AppRouter() {
@@ -29,6 +30,9 @@ function AppRouter() {
               ? <Redirect to="/" />
               : <Login />
           )}
+        </Route>
+        <Route exact path="/news">
+          <News />
         </Route>
         <Route exact={!user} path="/">
           {() => (
