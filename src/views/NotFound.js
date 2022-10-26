@@ -25,6 +25,7 @@ function NotFound() {
           className="not-found__logo__img"
           width={600}
           src={logo}
+          alt="logo"
         />
         <h2 className="not-found__logo__text">404NotFound!</h2>
       </div>
