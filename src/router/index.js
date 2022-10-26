@@ -25,25 +25,25 @@ function AppRouter() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/login">
-          {() => (
-            user
-              ? <Redirect to="/" />
-              : <Login />
-          )}
-        </Route>
-        <Route exact path="/news">
-          <News />
-        </Route>
-        <Route exact path="/news/:id">
-          <NewsDetail />
-        </Route>
         <Route exact={!user} path="/">
           {() => (
             user
               ? <Main />
               : <Redirect to="/login" />
           )}
+        </Route>
+        <Route path="/login">
+          {() => (
+            user
+              ? <Redirect to="/" />
+              : <Login />
+          )}
+        </Route>
+        <Route path="/news">
+          <News />
+        </Route>
+        <Route path="/news/:id">
+          <NewsDetail />
         </Route>
         <Route path="*">{NotFound}</Route>
       </Switch>
