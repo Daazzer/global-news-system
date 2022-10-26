@@ -27,6 +27,7 @@ const useRoutes = () => {
     },
     {
       path: '/news',
+      exact: true,
       component: <News />
     },
     {
