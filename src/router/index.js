@@ -13,10 +13,48 @@ import News from '@/views/News';
 import NewsDetail from '@/views/News/NewsDetail';
 import NotFound from '@/views/NotFound';
 
-function AppRouter() {
-  NProgress.start();
-
+const useRoutes = () => {
   const { user } = useSelector(state => state.login);
+
+  const routes = [
+    {
+      path: '/login',
+      component: routeProps => (
+        user
+          ? <Redirect to="/" />
+          : <Login {...routeProps} />
+      )
+    },
+    {
+      path: '/news',
+      component: <News />
+    },
+    {
+      path: '/news/:id',
+      component: routeProps => <NewsDetail {...routeProps} />
+    },
+    {
+      path: '/',
+      exact: !user,
+      component: routeProps => (
+        user
+          ? <Main {...routeProps} />
+          : <Redirect to="/login" />
+      )
+    },
+    {
+      path: '*',
+      component: routeProps => <NotFound {...routeProps} />
+    }
+  ];
+
+  return routes;
+};
+
+function AppRouter() {
+  const routes = useRoutes();
+
+  NProgress.start();
 
   useEffect(() => {
     NProgress.done();
@@ -25,27 +63,13 @@ function AppRouter() {
   return (
     <Router>
       <Switch>
-        <Route exact={!user} path="/">
-          {() => (
-            user
-              ? <Main />
-              : <Redirect to="/login" />
-          )}
-        </Route>
-        <Route path="/login">
-          {() => (
-            user
-              ? <Redirect to="/" />
-              : <Login />
-          )}
-        </Route>
-        <Route path="/news">
-          <News />
-        </Route>
-        <Route path="/news/:id">
-          <NewsDetail />
-        </Route>
-        <Route path="*">{NotFound}</Route>
+        {routes.map(route =>
+          <Route
+            key={route.path}
+            path={route.path}
+            exact={route.exact}
+          >{route.component}</Route>
+        )}
       </Switch>
     </Router>
   );
